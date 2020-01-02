@@ -9,6 +9,7 @@
                 <div class="card-header">Login Form</div>
 
                 <div class="card-body">
+
                     <form method="post" action="/user/login">
                         @csrf
 
@@ -39,7 +40,14 @@
                                 @enderror
                             </div>
                         </div>
-
+                        @if(Session::has('incorrect'))
+                            <div class="alert alert-danger">
+                                {{ Session::get('incorrect') }}
+                                @php
+                                    Session::forget('incorrect');
+                                @endphp
+                            </div>
+                        @endif
                         <div class="form-group row">
                             <div class="col-md-6 offset-md-4">
                                 <div class="form-check">
