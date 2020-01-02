@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Redirect;
 use App\Models\User;
 use Auth;
+use Log;
 use Illuminate\Http\Request;
 use Validator;
 
@@ -34,7 +35,7 @@ class UserController extends Controller
         if (Auth::guard('')->attempt(['email' => $email, 'password' => $pwd])) {
             return redirect()->intended('/home');
         } else {
-            return redirect()->back()
+            return back()
                 ->with('incorrect', 'Email or password incorrect!')
                 ->withInput();
         }
