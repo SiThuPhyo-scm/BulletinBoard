@@ -16,13 +16,6 @@ class UsersTableSeeder extends Seeder
                 'name' => 'admin',
                 'email' => 'admin@gmail.com',
                 'password' => bcrypt('123456'),
-                'profile' => 'profile',
-                'type' => '0',
-                'phone' => '09970563411',
-                'address' => 'Hlaing Township, Yangon',
-                'dob' => '1997/05/15',
-                'create_user_id' => '1',
-                'updated_user_id' => '1',
                 'created_at' => date('Y-m-d H:i:s'),
             ],
         ]);
