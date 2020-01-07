@@ -78,7 +78,7 @@
         </main>
         @guest
         @else
-        <footer class="page-footer">
+        <footer class="page-footer bg-white">
             <div class="container">
                 <div class="row">
                     <div class="col-md-10">
