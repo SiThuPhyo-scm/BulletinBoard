@@ -33,7 +33,7 @@ class UserController extends Controller
                 ->withInput();
         }
         if (Auth::guard('')->attempt(['email' => $email, 'password' => $pwd])) {
-            return redirect()->intended('postlist');
+            return redirect()->intended('post/create');
         } else {
             return back()
                 ->with('incorrect', 'Email or password incorrect!')
