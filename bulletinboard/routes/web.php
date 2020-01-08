@@ -17,8 +17,13 @@ Route::get('/', function () {
 
 Auth::routes();
 //login
-Route::post('/user/login', 'UserController@login');
+Route::post('/user/login', 'User\UserController@login');
 
-Route::get('post/create', 'PostController@createform');
+Route::get('/posts', 'Post\PostController@index');
 
-Route::put('post/create', 'PostController@create');
+Route::get('/post/create', 'Post\PostController@createform');
+
+Route::put('/post/create', 'Post\PostController@create');
+
+Route::post('/post/store', 'Post\PostController@store');
+
