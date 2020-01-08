@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Redirect;
@@ -33,7 +33,7 @@ class UserController extends Controller
                 ->withInput();
         }
         if (Auth::guard('')->attempt(['email' => $email, 'password' => $pwd])) {
-            return redirect()->intended('post/create');
+            return redirect()->intended('posts');
         } else {
             return back()
                 ->with('incorrect', 'Email or password incorrect!')

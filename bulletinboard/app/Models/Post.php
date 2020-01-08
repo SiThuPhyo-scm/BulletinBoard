@@ -3,29 +3,27 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class User extends Model
+class Post extends Model
 {
     use SoftDeletes;
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'profile',
-        'type',
-        'phone',
-        'address',
-        'dob',
+        'title',
+        'description',
+        'status',
         'create_user_id',
         'updated_user_id',
         'deleted_user_id',
         'deleted_at',
-        'remember_token',
     ];
 
-    public function parent()
+    /**
+     * Get the user that owns the post.
+     */
+    public function user()
     {
-        return $this->hasMany(User::class, 'id');
+        return $this->belongsTo(User::class, 'create_user_id');
     }
 }

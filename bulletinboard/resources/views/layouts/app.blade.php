@@ -42,7 +42,7 @@
                                 <a class="nav-link" href="user">User</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="postlist">Posts</a>
+                                <a class="nav-link" href="/posts">Posts</a>
                             </li>
                         </ul>
 
