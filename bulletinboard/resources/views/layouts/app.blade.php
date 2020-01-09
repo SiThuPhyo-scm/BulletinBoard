@@ -18,10 +18,11 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
 </head>
 <body>
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <nav class="navbar navbar-expand-md shadow-sm">
             <div class="container">
                 <h1>
                     SCM Bulletin Board
@@ -78,13 +79,13 @@
         </main>
         @guest
         @else
-        <footer class="page-footer bg-white">
+        <footer class="footer">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-10">
-                        <p>Seattle Consulting Myanmar</p>
+                    <div class="col-sm-8 col-md-10 mt-3">
+                        <p>Seattle Consulting Myanmar Co.,Ltd</p>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-sm-4 col-md-2 text-md-right mt-3">
                         <p>&copy copyright</p>
                     </div>
                 </div>
