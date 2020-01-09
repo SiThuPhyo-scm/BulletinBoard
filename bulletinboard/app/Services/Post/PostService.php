@@ -19,6 +19,15 @@ Class PostService implements PostServiceInterface
         $this->postDao = $postDao;
     }
     /**
+     * Get Posts List
+     * @param Object
+     * @return $posts
+     */
+    public function getPost($auth_id, $type)
+    {
+        return $this->postDao->getPost($auth_id, $type);
+    }
+    /**
      * Create Post
      * @param Object
      * @return $posts

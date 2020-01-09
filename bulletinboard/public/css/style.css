@@ -1,0 +1,43 @@
+body {
+    font-family: 'Times New Roman', Times, serif;
+}
+#app h1 {
+    color: #fff;
+}
+#app nav {
+    background-color: #03a9fc;
+}
+#app nav a {
+    color: #fff;
+    font-size: 15px;
+}
+#app nav a:hover {
+    color: #3342fa;
+}
+#app nav label {
+    color: #fff;
+    font-size: 15px;
+}
+.card-header h3 {
+    color: #03a9fc;
+}
+footer {
+    background-color: #58c5fc;
+    color: #fff;
+}
+table thead {
+    background-color: #03a9fc;
+}
+table thead th {
+    color: #fff;
+    text-align: center;
+}
+table tr td {
+    text-align: center;
+}
+.pagination a {
+    background-color: #03a9fc;
+}
+.pagination a:hover {
+    background-color: #09d6f3;
+}
