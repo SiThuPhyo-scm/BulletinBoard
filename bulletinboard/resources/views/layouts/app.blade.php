@@ -11,6 +11,7 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/custom.js') }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -33,22 +34,23 @@
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    @guest
-                        @else
+                    @if(Auth::check())
                         <ul class="navbar-nav mr-auto">
+                            @if(Auth::User()->type == 0)
                             <li class="nav-item">
-                                <a class="nav-link" href="userlist">Users</a>
+                                <a class="nav-link" href="/user/create">Users</a>
                             </li>
+                            @endif
                             <li class="nav-item">
-                                <a class="nav-link" href="user">User</a>
+                                <a class="nav-link" href="">User</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="/posts">Posts</a>
                             </li>
                         </ul>
 
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
+                        <!-- Right Side Of Navbar -->
+                        <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
 
                             <li class="nav-item">
@@ -67,9 +69,8 @@
                                     @csrf
                                 </form>
                             </li>
-
-                    </ul>
-                    @endguest
+                        </ul>
+                    @endif
                 </div>
             </div>
         </nav>
@@ -77,8 +78,7 @@
         <main class="py-4">
             @yield('content')
         </main>
-        @guest
-        @else
+        @if(Auth::check())
         <footer class="footer">
             <div class="container">
                 <div class="row">
@@ -91,7 +91,7 @@
                 </div>
             </div>
         </footer>
-        @endguest
+        @endif
     </div>
 </body>
 </html>

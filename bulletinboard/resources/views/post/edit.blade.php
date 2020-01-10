@@ -2,7 +2,13 @@
 
 @section('title','Update Post')
 @section('content')
-
+@guest
+<div class="card">
+    <div class="card-header">
+        <h3>Sorry my friend. Plase Login!!!!!</h3>
+    </div>
+</div>
+@else
 <div class="container">
     <div class="card">
         <div class="card-header">
@@ -12,12 +18,13 @@
             <div class="col-md-8 mx-auto">
                 <form action="/post/{{$post_detail->id}}" method="POST">
                     @csrf
+                    @method('PUT')
                     <div class="form-group row">
                         <label for="title" class="col-md-2">Title</label>
                         <div class="col-md-6">
                             <input type="text" id="title" name="title" class="form-control" value="{{$post_detail->title}}">
                             @error('title')
-                                <label class="text-danger">{{ $errors->first('title') }}</label>
+                                <label class="text-danger">{{ $message }}</label>
                             @enderror
                         </div>
                         <label for="require" class="col-md-1 col-form-label text-danger text-md-left">*</label>
@@ -50,5 +57,5 @@
         </div>
     </div>
 </div>
-
+@endguest
 @endsection

@@ -5,19 +5,20 @@ namespace App\Services\Post;
 use App\Contracts\Dao\Post\PostDaoInterface;
 use App\Contracts\Services\Post\PostServiceInterface;
 
-Class PostService implements PostServiceInterface
+class PostService implements PostServiceInterface
 {
     private $postDao;
 
     /**
-     * Class Contractor
+     * Class Constructor
      * @param OperatorPostDaoInterface
      * @return
      */
-    public function __contruct(PostDaoInterface $postDao)
+    public function __construct(PostDaoInterface $postDao)
     {
         $this->postDao = $postDao;
     }
+
     /**
      * Get Posts List
      * @param Object
@@ -27,6 +28,7 @@ Class PostService implements PostServiceInterface
     {
         return $this->postDao->getPost($auth_id, $type);
     }
+
     /**
      * Create Post
      * @param Object
@@ -35,5 +37,15 @@ Class PostService implements PostServiceInterface
     public function store($auth_id, $post)
     {
         return $this->postDao->store($auth_id, $post);
+    }
+
+    /**
+     * Update Post
+     *
+     * @param
+     */
+    public function update($user_id, $post)
+    {
+        return $this->postDao->update($user_id, $post);
     }
 }

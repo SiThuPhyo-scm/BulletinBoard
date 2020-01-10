@@ -2,7 +2,13 @@
 
 @section('title','PostList')
 @section('content')
-
+@guest
+<div class="card">
+    <div class="card-header">
+        <h3>Sorry my friend. Plase Login!!!!!</h3>
+    </div>
+</div>
+@else
 <div class="container">
     <div class="card">
         <div class="card-header">
@@ -23,6 +29,14 @@
                     </div>
                 </form>
             </div>
+            @if(Session::has('success'))
+                <div class="alert alert-success">
+                    {{ Session::get('success') }}
+                    @php
+                        Session::forget('success');
+                    @endphp
+                </div>
+            @endif
             <div class="row justify-content-center">
                 <table class="table table-bordered">
                     <thead class="text-nowrap">
@@ -56,5 +70,5 @@
         </div>
     </div>
 </div>
-
+@endguest
 @endsection

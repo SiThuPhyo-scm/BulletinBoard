@@ -2,7 +2,13 @@
 
 @section('title','Post Create Confirm')
 @section('content')
-
+@guest
+<div class="card">
+    <div class="card-header">
+        <h3>Sorry my friend. Plase Login!!!!!</h3>
+    </div>
+</div>
+@else
 <div class="container">
     <div class="card">
         <div class="card-header">
@@ -36,5 +42,5 @@
         </div>
     </div>
 </div>
-
+@endguest
 @endsection

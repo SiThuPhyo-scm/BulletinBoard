@@ -20,6 +20,7 @@ class PostController extends Controller
     {
         $this->postService = $postService;
     }
+
     /**
      * Show post registrarrion form.
      */
@@ -36,16 +37,16 @@ class PostController extends Controller
     public function index()
     {
         $auth_id = Auth::user()->id;
-        $type = Auth::user()->type;
-        if ($type == '0') {
-            $posts = Post::orderBy('updated_at', 'DESC')->paginate(5);
-        } else {
-            $posts = Post::where('create_user_id', $auth_id)
-                ->orderBy('updated_at', 'DESC')
-                ->paginate(5);
-        }
+        $type    = Auth::user()->type;
+        session()->forget([
+            'searchKeyword',
+            'title',
+            'desc'
+        ]);
+        $posts = $this->postService->getPost($auth_id, $type);
         return view('post.postList', ['posts' => $posts]);
     }
+
     /**
      * Show the form for create a new Post
      *
@@ -65,8 +66,9 @@ class PostController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         }
-        return view('post.createConfirm', ['title' => $title], ['desc' => $desc]);
+        return view('post.createConfirm', compact('title', 'desc'));
     }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -75,19 +77,15 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $auth_id = Auth::user()->id;
-        $insert_post = new Post([
-            'title' => $request->title,
-            'description' => $request->desc,
-            'create_user_id' => $auth_id,
-            'updated_user_id' => $auth_id,
-        ]);
-        $insert_post->save();
-        $posts = Post::where('create_user_id', $auth_id)
-            ->orderBy('updated_at', 'DESC')
-            ->paginate(5);
-        return redirect()->intended('posts');
+        $auth_id =  Auth::user()->id;
+        $post    =  new Post;
+        $post->title = $request->title;
+        $post->desc  = $request->desc;
+        $posts   =  $this->postService->store($auth_id, $post);
+        return redirect()->intended('posts')
+            ->withSuccess('Post create successfully.');
     }
+
     /**
      * Show the form for update post
      *
@@ -99,6 +97,7 @@ class PostController extends Controller
         $post_detail = Post::find($post_id);
         return view('post.edit', ['post_detail' => $post_detail]);
     }
+
     /**
      * Update Confirm the specified resource in storage.
      *
@@ -113,7 +112,7 @@ class PostController extends Controller
         $desc = $request->desc;
         $status = $request->status;
         $validator = Validator::make($request->all(), [
-            'title' => 'required|max:255|unique:posts,title' . $post->id,
+            'title' => 'required|max:255|unique:posts,title,' . $post->id,
             'desc' => 'required',
         ]);
         if ($validator->fails()) {
@@ -126,6 +125,7 @@ class PostController extends Controller
         }
         return view('post.editConfirm', compact('title', 'desc', 'status', 'post_id'));
     }
+
     /**
      * Update the specified resource in storage.
      *
@@ -136,17 +136,13 @@ class PostController extends Controller
     public function update(Request $request, $post_id)
     {
         $user_id  =  Auth::user()->id;
-        $post->id = $post_id;
-        $update_post = Post::find($post->id);
-        $update_post->title            =  $post->title;
-        $update_post->description      =  $post->desc;
-        $update_post->status           =  $post->status;
-        $update_post->updated_user_id  =  $user_id;
-        $update_post->updated_at       =  now();
-        $update_post->save();
-        $posts = Post::where('post_id', $post_id)
-            ->orderBy('updated_at', 'DESC')
-            ->paginate(5);
-        return redirect()->intended('posts');
+        $post     =  new Post;
+        $post->id     =  $post_id;
+        $post->title  =  $request->title;
+        $post->desc   =  $request->desc;
+        $post->status   =  $request->status;
+        $posts    =  $this->postService->update($user_id, $post);
+        return redirect()->intended('posts')
+            ->withSuccess('Post update successfully.');
     }
 }
