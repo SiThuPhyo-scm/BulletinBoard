@@ -21,7 +21,7 @@ class PostService implements PostServiceInterface
 
     /**
      * Get Posts List
-     * @param Object
+     * @param auth user id and user type
      * @return $posts
      */
     public function getPost($auth_id, $type)
@@ -31,7 +31,7 @@ class PostService implements PostServiceInterface
 
     /**
      * Create Post
-     * @param Object
+     * @param auth user id and input data
      * @return $posts
      */
     public function store($auth_id, $post)
@@ -40,9 +40,21 @@ class PostService implements PostServiceInterface
     }
 
     /**
+     * Edit Post Details
+     *
+     * @param [post_id] user click post
+     * @return $posts
+     */
+    public function edit($post_id)
+    {
+        return $this->postDao->edit($post_id);
+    }
+
+    /**
      * Update Post
      *
-     * @param
+     * @param auth user id and input data
+     * @return $post
      */
     public function update($user_id, $post)
     {

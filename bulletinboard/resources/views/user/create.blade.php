@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('title','Create User')
+
+@section('script')
+<script src="{{ asset('js/custom.js') }}" defer></script>
+@endsection
+
 @section('content')
 @guest
 <div class="card">
@@ -16,7 +21,7 @@
         </div>
         <div class="card-body">
             <div class="col-md-6 mx-auto">
-                <form action="/user/createConfirm" method="POST">
+                <form action="/user/createConfirm" method="post" enctype="multipart/form-data">
                     @csrf
 
                     <div class="form-group row">
@@ -94,11 +99,11 @@
                     <div class="form-group row">
                         <label for="profile" class="col-md-4">Profile</label>
                         <div class="col-md-7">
-                            <input type="file" name="profile" class="form-control" onchange="readURL(this);">
-                            @error('profile')
+                            <input type="file" id="profile"name="profileImg" value="{{old('profile')}}" class="form-control" onchange="readURL(this);">
+                            @error('profileImg')
                                 <label for="validation" class="text-danger">{{ $message }}</label>
                             @enderror
-                            <img src="http://placehold.it/180" id="stp" class="mt-3" alt="profile">
+                            <img src="http://placehold.it/180" id="stp" class="mt-3 profile-img" alt="profile">
                         </div>
                         <label for="require" class="col-md-1 col-form-label text-danger text-md-left">*</label>
                     </div>

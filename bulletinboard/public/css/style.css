@@ -41,4 +41,7 @@ table tr td {
 .pagination a:hover {
     background-color: #09d6f3;
 }
-
+.profile-img {
+    width: 200px;
+    height: 200px;
+}

@@ -23,16 +23,18 @@ class PostController extends Controller
 
     /**
      * Show post registrarrion form.
+     *
+     * @return [view] CreatePost
      */
-    public function createform()
+    public function create()
     {
         return view('post.create');
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of the Post Detail.
      *
-     * @return \Illuminate\Http\Response
+     * @return [view] Post List
      */
     public function index()
     {
@@ -44,16 +46,16 @@ class PostController extends Controller
             'desc'
         ]);
         $posts = $this->postService->getPost($auth_id, $type);
-        return view('post.postList', ['posts' => $posts]);
+        return view('post.postList', compact('posts'));
     }
 
     /**
-     * Show the form for create a new Post
+     * Create a new post instance after a valid registration.
      *
-     * @param Request $request
-     * @return Response
+     * @param [Request] title and description from user input
+     * @return [view] create post confirmation page
      */
-    public function create(Request $request)
+    public function createConfirm(Request $request)
     {
         $title = $request->title;
         $desc = $request->desc;
@@ -70,10 +72,10 @@ class PostController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created post in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  [Request] post details from user input and auth_id
+     * @return [view] postlist
      */
     public function store(Request $request)
     {
@@ -89,21 +91,21 @@ class PostController extends Controller
     /**
      * Show the form for update post
      *
-     * @param int $id
-     * @return \Illuminate\Http\Response
+     * @param [Request] post_id User click post
+     * @return [view] update post with post detail
      */
     public function edit($post_id)
     {
-        $post_detail = Post::find($post_id);
+        $post_detail = $this->postService->edit($post_id);
         return view('post.edit', ['post_detail' => $post_detail]);
     }
 
     /**
      * Update Confirm the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  [Request] user input data
+     * @param  auth_id
+     * @return [view] update confirmation page
      */
     public function editConfirm(Request $request, $post_id)
     {
@@ -127,11 +129,11 @@ class PostController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update Post in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  [Request] user input data
+     * @param  auth_id
+     * @return [view] postlist with successfully message
      */
     public function update(Request $request, $post_id)
     {
