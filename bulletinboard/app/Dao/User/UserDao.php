@@ -8,9 +8,31 @@ use App\Models\User;
 class UserDao implements UserDaoInterface
 {
     /**
-     * Create Post
-     * @param Object
-     * @return $posts
+     * Get User List
+     *
+     * @return $users user data
+     */
+    public function getuser()
+    {
+        $users = User::select(
+            'users.name',
+            'users.email',
+            'users.phone',
+            'users.dob',
+            'users.address',
+            'users.created_at',
+            'users.id',
+            'u1.name as created_user_name')
+            ->join('users as u1', 'u1.id', 'users.create_user_id')
+            ->orderBy('users.updated_at', 'DESC')
+            ->paginate(5);
+          return $users;
+    }
+
+    /**
+     * Create User
+     * @param auth user id and user input data
+     * @return $userlist
      */
     public function store($auth_id, $user)
     {
@@ -28,6 +50,29 @@ class UserDao implements UserDaoInterface
         ]);
         $insert_user->save();
         return redirect()->back();
-  }
+    }
 
+    /**
+     * Show auth_user information
+     *
+     * @param [auth_id] login user id
+     * @return [user_profile] user detail where auth_id
+     */
+    public function profile($auth_id)
+    {
+        $user_profile = User::find($auth_id);
+        return $user_profile;
+    }
+
+    /**
+     * Edit auth_user information
+     *
+     * @param [auth_id] login user id
+     * @return [users] information where auth_id
+     */
+    public function edit($auth_id)
+    {
+        $users = User::find($auth_id);
+        return $users;
+    }
 }

@@ -18,16 +18,16 @@ class UserController extends Controller
 {
     private $userService;
 
-    public function __construct(UserServiceInterface $user)
+    public function __construct(UserServiceInterface $userService)
     {
-        $this->userService = $user;
+        $this->userService = $userService;
     }
     /**
      * Customer Login
      *
      * Login action using user email and password
-     * @param [Request] $request
-     * @return [View] postlist
+     * @param [Request] email and password from user input
+     * @return [view] Post List
      */
     public function login(Request $request)
     {
@@ -50,6 +50,28 @@ class UserController extends Controller
                 ->withInput();
         }
     }
+    /**
+     * Show Users Detail
+     *
+     * @return [view] User List
+     */
+    public function index()
+    {
+        session()->forget([
+            'name',
+            'email',
+            'type',
+            'phone',
+            'dob',
+            'address',
+            'search_name',
+            'search_email',
+            'search_date_from',
+            'search_date_to'
+        ]);
+        $users = $this->userService->getuser();
+        return view('user.userList', compact('users'));
+    }
 
     /**
      * Registration New User
@@ -64,7 +86,7 @@ class UserController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param [Request] $request
+     * @param [Request] input data
      *
      * @return [View] create user confirmation page
      */
@@ -75,7 +97,8 @@ class UserController extends Controller
             'email'     =>  'required|email|unique:users,email',
             'password'  =>  'required|min:8',
             'confirm_password' => 'required|min:8|same:password',
-            'type'  => 'required'
+            'type'      => 'required',
+            'profileImg'   => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         if ($validator->fails()) {
             return redirect()->back()
@@ -89,14 +112,13 @@ class UserController extends Controller
         $phone   =  $request->phone;
         $dob     =  $request->dob;
         $address =  $request->address;
-        $profile_img =  $request->file('profile');
+        $profile_img =  $request->file('profileImg');
 
         //password show as ***
         $hide = "*";
         $pwd_hide = str_pad($hide, strlen($pwd), "*");
         //tempory save profile photo
-        $filename = "";
-        if ($profile_img) {
+        if ($filename=$profile_img) {
             $filename = $profile_img->getClientOriginalName();
             $profile_img->move('img/tempProfile', $filename);
         }
@@ -108,7 +130,7 @@ class UserController extends Controller
             'dob'   => $dob,
             'address' => $address
         ]);
-        return view('User.createConfirm', compact(
+        return view('user.createConfirm', compact(
             'name', 'email','pwd', 'type', 'phone', 'dob', 'address', 'pwd_hide', 'filename'
         ));
     }
@@ -116,15 +138,15 @@ class UserController extends Controller
     /**
      * Store User Information
      *
-     * @param [Request] $request
+     * @param [Request] after validation user input
      * @return [view] userlist
      */
     public function store(Request $request)
     {
         $auth_id    =  Auth::user()->id;
         //save profile image
-        $filename  =  $request->filename;
-        if ($filename) {
+        $profile  =  $request->filename;
+        if ($filename=$profile) {
             $oldpath    =  public_path() . '/img/tempProfile/' . $filename;
             $newpath    =  public_path() . '/img/profile/' . $filename;
             File::move($oldpath, $newpath);
@@ -146,6 +168,43 @@ class UserController extends Controller
         $user->address  =  $request->address;
         $user->profile  =  $profile;
         $insert_user  =  $this->userService->store($auth_id, $user);
-        return redirect()->intended('posts')->with('success', 'User create successfully.');
+        return redirect()->intended('users')->with('success', 'User create successfully.');
+    }
+
+    /**
+     * Show auth_user information
+     *
+     * @param
+     * @return [view] Profile with auth_user information
+     */
+    public function profile()
+    {
+        $user_id = Auth::user()->id;
+        $user_profile = $this->userService->profile($user_id);
+        return view('user.profile', compact('user_profile'));
+    }
+
+    /**
+     * Show the form for Update User
+     *
+     * @param
+     * @return [view] Update User with auth_user information
+     */
+    public function edit()
+    {
+        $user_id = Auth::user()->id;
+        $users = $this->userService->edit($user_id);
+        return view('user.edit', compact('users'));
+    }
+    /**
+     * Update user after a valid registration.
+     *
+     * @param [Request] input user data
+     * @param [auth user id]
+     * @return [view] Update User confirmation afer validation
+     */
+    public function editConfirm(Request $request, $user_id)
+    {
+       return view('user.editConfirm');
     }
 }

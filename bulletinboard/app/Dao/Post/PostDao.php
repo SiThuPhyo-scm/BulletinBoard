@@ -9,7 +9,7 @@ class PostDao implements PostDaoInterface
 {
     /**
      * Get Posts List
-     * @param Object
+     * @param auth user id and user type
      * @return $posts
      */
     public function getPost($auth_id, $type)
@@ -19,14 +19,14 @@ class PostDao implements PostDaoInterface
         } else {
             $posts = Post::where('create_user_id', $auth_id)
                 ->orderBy('updated_at', 'DESC')
-                ->paginate(50);
+                ->paginate(5);
         }
         return $posts;
     }
 
     /**
      * Create Post
-     * @param Object
+     * @param auth user id and input data
      * @return $posts
      */
     public function store($auth_id, $post)
@@ -40,13 +40,25 @@ class PostDao implements PostDaoInterface
         $insert_post->save();
         $posts = Post::where('create_user_id', $auth_id)
             ->orderBy('updated_at', 'DESC')
-            ->paginate(50);
+            ->paginate(5);
         return $posts;
     }
 
     /**
+     * Edit Post Details
+     *
+     * @param [post_id] User Click Post
+     * @return [psot detail]
+     */
+    public function edit($post_id)
+    {
+        $post_detail = Post::find($post_id);
+        return $post_detail;
+    }
+
+    /**
      * Update Post
-     * @param Object
+     * @param auth user id and input data
      * @return $posts
      */
     public function update($user_id, $post)

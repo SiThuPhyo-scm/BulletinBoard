@@ -19,18 +19,26 @@ Auth::routes();
 //User
 Route::post('/user/login', 'User\UserController@login');
 
+Route::get('/users', 'User\UserController@index');
+
 Route::get('/user/create', 'User\UserController@create');
 
 Route::post('/user/createConfirm', 'User\UserController@createConfirm');
 
 Route::post('/user/store', 'User\UserController@store');
 
+Route::get('/user/profile', 'User\UserController@profile');
+
+Route::get('/user/{id}', 'User\UserController@edit');
+
+Route::post('/user/{id}', 'User\UserController@editConfirm');
+
 //Post
 Route::get('/posts', 'Post\PostController@index')->name('postList');
 
-Route::get('/post/create', 'Post\PostController@createform');
+Route::get('/post/create', 'Post\PostController@create');
 
-Route::post('/post/create', 'Post\PostController@create');
+Route::post('/post/create', 'Post\PostController@createConfirm');
 
 Route::post('/post/store', 'Post\PostController@store');
 

@@ -16,7 +16,7 @@
         </div>
         <div class="card-body">
             <div class="col-md-10 mx-auto">
-                <form action="/user/store" method="POST">
+                <form action="/user/store" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-md-8">
@@ -67,7 +67,8 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <img src="/img/tempProfile/{{$filename}}" alt="profile">
+                            <input type="hidden" id="profile" name="filename" value="{{ $filename }}" class="form-control" onchange="readURL(this);">
+                            <img src="/img/tempProfile/{{$filename}}" class="profile-img" alt="profile">
                         </div>
                     </div>
                 </form>
