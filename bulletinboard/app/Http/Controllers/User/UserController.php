@@ -16,40 +16,14 @@ use Log;
 
 class UserController extends Controller
 {
+
     private $userService;
 
     public function __construct(UserServiceInterface $userService)
     {
         $this->userService = $userService;
     }
-    /**
-     * Customer Login
-     *
-     * Login action using user email and password
-     * @param [Request] email and password from user input
-     * @return [view] Post List
-     */
-    public function login(Request $request)
-    {
-        $email = $request->email;
-        $pwd = $request->password;
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required|min:6',
-        ]);
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
-        if (Auth::guard('')->attempt(['email' => $email, 'password' => $pwd])) {
-            return redirect()->intended('posts');
-        } else {
-            return back()
-                ->with('incorrect', 'Email or password incorrect!')
-                ->withInput();
-        }
-    }
+
     /**
      * Show Users Detail
      *
@@ -187,12 +161,11 @@ class UserController extends Controller
     /**
      * Show the form for Update User
      *
-     * @param
+     * @param $user_id
      * @return [view] Update User with auth_user information
      */
-    public function edit()
+    public function edit($user_id)
     {
-        $user_id = Auth::user()->id;
         $users = $this->userService->edit($user_id);
         return view('user.edit', compact('users'));
     }
@@ -205,6 +178,56 @@ class UserController extends Controller
      */
     public function editConfirm(Request $request, $user_id)
     {
-       return view('user.editConfirm');
+        $user = User::find($user_id);
+        $email = $request->email;
+        $validator = Validator::make($request->all(), [
+            'name' =>  'required',
+            'email'     =>  'required|email|unique:users,email,' . $user->id,
+            'type'     =>  'required',
+            'profileImg' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+        }
+        $user   =   new User;
+        $user->name    =  $request->name;
+        $user->email   =  $request->email;
+        $user->type    =  $request->type;
+        $user->phone   =  $request->phone;
+        $user->dob     =  $request->dob;
+        $user->address =  $request->address;
+        $new_profile   =  $request->file('profileImg');
+
+         //tempory save new profile photo
+        if ($filename=$new_profile) {
+            $filename = $new_profile->getClientOriginalName();
+            $new_profile->move('img/tempProfile', $filename);
+        }
+        return view('user.editConfirm', compact('user', 'filename', 'user_id'));
+    }
+
+    /**
+     * Update Profile in database
+     *
+     * @param [Request] edit user input
+     * @param $user_id
+     * @return [userlist] with successfully message.
+     */
+    public function update(Request $request, $user_id)
+    {
+        $user = new User;
+        $auth_id = Auth::user()->id;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->type = $request->type;
+        $user->phone = $request->phone;
+        $user->dob = $request->dob;
+        $user->address = $request->address;
+        $user->profile = $request->filename;
+        $users = $this->userService->update($auth_id, $user);
+        return redirect()->intended('users')
+            ->withSuccess('Profile update successfully.');
     }
 }

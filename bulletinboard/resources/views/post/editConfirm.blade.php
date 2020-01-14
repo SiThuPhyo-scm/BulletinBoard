@@ -2,37 +2,31 @@
 
 @section('title','Post Update Confirm')
 @section('content')
-@guest
-<div class="card">
-    <div class="card-header">
-        <h3>Sorry my friend. Plase Login!!!!!</h3>
-    </div>
-</div>
-@else
+
 <div class="container">
     <div class="card">
         <div class="card-header">
             <h3>Post Update Confirmation</h3>
         </div>
         <div class="card-body">
-            <div class="col-md-8 mx-auto">
+            <div class="col-md-10 col-lg-8 mx-auto">
                 <form action="/post/{{$post_id}}" method="post">
                     @csrf
 
                     <div class="form-group row">
-                        <label for="title" class="col-md-4">Title</label>
-                        <label for="title" class="col-md-4">{{$title}}</label>
+                        <label for="title" class="col-4 col-sm-4 col-md-4">Title</label>
+                        <label for="title" class="col-8 col-sm-8 col-md-8">{{$title}}</label>
                         <input type="hidden" name="title" value="{{$title}}">
                     </div>
                     <div class="form-group row">
-                        <label for="desc" class="col-md-4">Description</label>
-                        <label for="desc" class="col-md-4">{{$desc}}</label>
+                        <label for="desc" class="col-4 col-sm-4 col-md-4">Description</label>
+                        <label for="desc" class="col-8 col-sm-8 col-md-8">{{$desc}}</label>
                         <input type="hidden" name="desc" value="{{$desc}}">
                     </div>
                     <div class="form-group row">
-                        <label for="status" class="col-md-4">Status</label>
-                        <div class="col-md-4">
-                            <input type="checkbox" id="status" disabled="disabled" class="form-check-input col-md-1" value="{{$status}}"
+                        <label for="status" class="col-4 col-sm-4 col-md-4">Status</label>
+                        <div class="col-8 col-sm-8 col-md-8">
+                            <input type="checkbox" id="status" disabled="disabled" class="form-check-input ml-2" value="{{$status}}"
                                 @if($status=='1' ) {{"checked"}} @endif>
                                 <input type="hidden" class="form-control col-md-6" name="status" id="status" value="{{$status}}">
                             </div>
@@ -48,5 +42,5 @@
         </div>
     </div>
 </div>
-@endguest
+
 @endsection

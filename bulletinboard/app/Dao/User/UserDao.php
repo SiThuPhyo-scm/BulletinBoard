@@ -75,4 +75,29 @@ class UserDao implements UserDaoInterface
         $users = User::find($auth_id);
         return $users;
     }
+
+    /**
+     * Update User Profile
+     *
+     * @param [$user_id] auth id
+     * @param [$user] user edit data
+     * @return [userlist] update successfully message
+     */
+    public function update($auth_id, $user)
+    {
+        $update = User::find($auth_id);
+        $update->name = $user->name;
+        $update->email = $user->email;
+        $update->type = $user->type;
+        $update->phone = $user->phone;
+        $update->address = $user->address;
+        $update->profile = $user->profile;
+        $update->updated_user_id = $auth_id;
+        $update->updated_at = now();
+        $update->save();
+        $users = User::where('create_user_id', $auth_id)
+            ->orderBy('updated_at', 'DESC')
+            ->paginate(5);
+        return $users;
+    }
 }

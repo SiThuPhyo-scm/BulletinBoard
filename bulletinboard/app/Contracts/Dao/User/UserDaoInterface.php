@@ -8,4 +8,5 @@ interface UserDaoInterface
     public function store($auth_id, $post);
     public function profile($auth_id);
     public function edit($auth_id);
+    public function update($user, $user_id);
 }

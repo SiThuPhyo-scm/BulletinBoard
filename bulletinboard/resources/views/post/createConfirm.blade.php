@@ -2,13 +2,7 @@
 
 @section('title','Post Create Confirm')
 @section('content')
-@guest
-<div class="card">
-    <div class="card-header">
-        <h3>Sorry my friend. Plase Login!!!!!</h3>
-    </div>
-</div>
-@else
+
 <div class="container">
     <div class="card">
         <div class="card-header">
@@ -17,18 +11,18 @@
             </div>
         </div>
         <div class="card-body">
-            <div class="col-md-8 mx-auto">
+            <div class="col-md-10 col-lg-8 mx-auto">
                 <form action="/post/store" method="post">
                     @csrf
 
                     <div class="form-group row">
-                        <label for="title" class="col-md-4">Title</label>
-                        <label for="title" class="col-md-4">{{$title}}</label>
+                        <label for="title" class="col-4 col-sm4 col-md-4">Title</label>
+                        <label for="title" class="col-6 col-sm6 col-md-6">{{$title}}</label>
                         <input type="hidden" name="title" value="{{$title}}">
                     </div>
                     <div class="form-group row">
-                        <label for="desc" class="col-md-4">Description</label>
-                        <label for="desc" class="col-md-4">{{$desc}}</label>
+                        <label for="desc" class="col-4 col-sm4 col-md-4">Description</label>
+                        <label for="desc" class="col-6 col-sm6 col-md-6">{{$desc}}</label>
                         <input type="hidden" name="desc" value="{{$desc}}">
                     </div>
                     <div class="form-group">
@@ -42,5 +36,5 @@
         </div>
     </div>
 </div>
-@endguest
+
 @endsection
