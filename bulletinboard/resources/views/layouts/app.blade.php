@@ -83,10 +83,10 @@
         <footer class="footer">
             <div class="container">
                 <div class="row">
-                    <div class="col-sm-8 col-md-10 mt-3">
+                    <div class="col-8 col-sm-8 col-md-10 mt-3">
                         <p>Seattle Consulting Myanmar Co.,Ltd</p>
                     </div>
-                    <div class="col-sm-4 col-md-2 text-md-right mt-3">
+                    <div class="col-4 col-sm-4 col-md-2 text-md-right mt-3">
                         <p>&copy copyright</p>
                     </div>
                 </div>

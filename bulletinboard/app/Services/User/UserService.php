@@ -54,11 +54,21 @@ class UserService implements UserServiceInterface
      * Edit auth_user information
      *
      * @param [auth_id] login user id
-     *
      * @return [user] information
      */
     public function edit($auth_id)
     {
         return $this->userDao->edit($auth_id);
+    }
+
+    /**
+     * Update User Profile
+     *
+     * @param [Request] user input
+     * @param [$user_id] auth id
+     */
+    public function update($auth_id, $user)
+    {
+        return $this->userDao->update($auth_id, $user);
     }
 }

@@ -30,8 +30,8 @@
                     @endphp
                 </div>
             @endif
-            <div class="row justinfy-content-center">
-                <table class="table table-bordered">
+            <div class="row table-scroll">
+                <table class="table table-bordered col-12 col-sm-12 col-md-12">
                     <thead class="text-nowrap">
                         <th>Name</th>
                         <th>Email</th>
@@ -59,7 +59,7 @@
             </div>
             <div class="row">
                 <!-- pagination -->
-                <ul class="pagination col-md-12 justify-content-center">
+                <ul class="pagination col-md-12 justify-content-center mt-2">
                     {{$users->links()}}
                 </ul>
             </div>

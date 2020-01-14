@@ -16,36 +16,38 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-//User
-Route::post('/user/login', 'User\UserController@login');
 
-Route::get('/users', 'User\UserController@index');
+Route::group(['middleware' => ['auth']], function () {
+    //User
+    Route::get('/users', 'User\UserController@index');
 
-Route::get('/user/create', 'User\UserController@create');
+    Route::get('/user/create', 'User\UserController@create');
 
-Route::post('/user/createConfirm', 'User\UserController@createConfirm');
+    Route::post('/user/createConfirm', 'User\UserController@createConfirm');
 
-Route::post('/user/store', 'User\UserController@store');
+    Route::post('/user/store', 'User\UserController@store');
 
-Route::get('/user/profile', 'User\UserController@profile');
+    Route::get('/user/profile', 'User\UserController@profile');
 
-Route::get('/user/{id}', 'User\UserController@edit');
+    Route::get('/user/{id}', 'User\UserController@edit');
 
-Route::post('/user/{id}', 'User\UserController@editConfirm');
+    Route::put('/user/{id}', 'User\UserController@editConfirm');
 
-//Post
-Route::get('/posts', 'Post\PostController@index')->name('postList');
+    Route::post('/user/{id}', 'User\UserController@update');
 
-Route::get('/post/create', 'Post\PostController@create');
+    //Post
+    Route::get('/posts', 'Post\PostController@index')->name('postList');
 
-Route::post('/post/create', 'Post\PostController@createConfirm');
+    Route::get('/post/create', 'Post\PostController@create');
 
-Route::post('/post/store', 'Post\PostController@store');
+    Route::post('/post/create', 'Post\PostController@createConfirm');
 
-Route::get('/post/{id}', 'Post\PostController@edit');
+    Route::post('/post/store', 'Post\PostController@store');
 
-Route::put('/post/{id}', 'Post\PostController@editConfirm');
+    Route::get('/post/{id}', 'Post\PostController@edit');
 
-Route::post('/post/{id}', 'Post\PostController@update')->name('posts.update');
+    Route::put('/post/{id}', 'Post\PostController@editConfirm');
 
+    Route::post('/post/{id}', 'Post\PostController@update')->name('posts.update');
 
+});

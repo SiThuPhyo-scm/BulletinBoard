@@ -2,13 +2,7 @@
 
 @section('title','PostList')
 @section('content')
-@guest
-<div class="card">
-    <div class="card-header">
-        <h3>Sorry my friend. Plase Login!!!!!</h3>
-    </div>
-</div>
-@else
+
 <div class="container">
     <div class="card">
         <div class="card-header">
@@ -37,7 +31,7 @@
                     @endphp
                 </div>
             @endif
-            <div class="row justify-content-center">
+            <div class="row table-scroll">
                 <table class="table table-bordered">
                     <thead class="text-nowrap">
                         <th>Post Title</th>
@@ -63,12 +57,12 @@
             </div>
             <div class="row">
                 <!-- pagination -->
-                <ul class="pagination col-md-12 justify-content-center">
+                <ul class="pagination col-md-12 justify-content-center mt-2">
                     {{$posts->links()}}
                 </ul>
             </div>
         </div>
     </div>
 </div>
-@endguest
+
 @endsection
