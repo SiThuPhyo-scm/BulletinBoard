@@ -35,6 +35,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('/user/{id}', 'User\UserController@update');
 
+    Route::get('/user/password/{id}', 'User\UserController@password');
+
     //Post
     Route::get('/posts', 'Post\PostController@index')->name('postList');
 

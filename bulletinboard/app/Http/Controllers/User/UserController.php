@@ -230,4 +230,16 @@ class UserController extends Controller
         return redirect()->intended('users')
             ->withSuccess('Profile update successfully.');
     }
+
+    /**
+     * Change Password
+     *
+     * @param [old password]
+     * @param [new password] user change password
+     * @return
+     */
+    public function password()
+    {
+        return view('user.password');
+    }
 }
