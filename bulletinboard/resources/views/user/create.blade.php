@@ -93,7 +93,7 @@
                     <div class="form-group row">
                         <label for="profile" class="col-4 col-sm-4 col-md-4">Profile</label>
                         <div class="col-7 col-sm-7 col-md-7">
-                            <input type="file" id="profile"name="profileImg" value="{{old('profile')}}" class="form-control" onchange="readURL(this);">
+                            <input type="file" id="profile" name="profileImg" value="{{old('profile')}}" class="form-control" onchange="readURL(this);">
                             @error('profileImg')
                                 <label for="validation" class="text-danger">{{ $message }}</label>
                             @enderror

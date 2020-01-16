@@ -50,6 +50,20 @@ class PostController extends Controller
     }
 
     /**
+     * Search Post Details
+     * @param [request]
+     * @return [postlist]
+     */
+    public function search(Request $request)
+    {
+        $auth_id = Auth::user()->id;
+        $type = Auth::user()->type;
+        $searchkeyword = $request->search;
+        $posts = $this->postService->search($auth_id, $type, $searchkeyword);
+        return view('post.postlist', compact('posts'));
+    }
+
+    /**
      * Create a new post instance after a valid registration.
      *
      * @param [Request] title and description from user input
@@ -147,4 +161,17 @@ class PostController extends Controller
         return redirect()->intended('posts')
             ->withSuccess('Post update successfully.');
     }
+
+    /**
+     * Show csv upload form
+     *
+     */
+    public function upload()
+    {
+        return view('post.upload');
+    }
+
+    /**
+     * Import
+     */
 }

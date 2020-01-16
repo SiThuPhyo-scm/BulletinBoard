@@ -25,6 +25,40 @@ class PostDao implements PostDaoInterface
     }
 
     /**
+     * Search Post Details
+     *
+     * @param [auth_id]
+     * @param [type] admin or user
+     * @param [searchkeyword] User input title,description and create_user
+     * @return [posts]
+     */
+    public function search($auth_id, $type, $searchkeyword)
+    {
+        if ($type == 0) {
+            if ($searchkeyword == null) {
+              $posts = Post::orderBy('updated_at', 'DESC')->paginate(50);
+            } else {
+                $posts = Post::where('title', 'LIKE', '%' . $searchkeyword . '%')
+                  ->orwhere('description', 'LIKE', '%' . $searchkeyword . '%')
+                  ->orderBy('updated_at', 'DESC')
+                  ->paginate(50);
+            }
+          } else {
+              if ($searchkeyword == null) {
+                $posts = Post::where('create_user_id', '=', $auth_id)
+                  ->orderBy('updated_at', 'DESC')->paginate(50);
+              } else {
+                  $posts = Post::where('title', 'LIKE', '%' . $searchkeyword . '%')
+                    ->orwhere('description', 'LIKE', '%' . $searchkeyword . '%')
+                    ->where('create_user_id', '=', $auth_id)
+                    ->orderBy('updated_at', 'DESC')
+                    ->paginate(50);
+              }
+          }
+          return $posts;
+    }
+
+    /**
      * Create Post
      * @param auth user id and input data
      * @return $posts

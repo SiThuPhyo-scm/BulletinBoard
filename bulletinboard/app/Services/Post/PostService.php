@@ -30,6 +30,18 @@ class PostService implements PostServiceInterface
     }
 
     /**
+     * Search Post Detail
+     * @param [auth_id]
+     * @param [type] Admin or User
+     * @param [searchkeyword] user input title,description and create_user
+     * @return [postDao] search function
+     */
+    public function search($auth_id, $type, $searchkeyword)
+    {
+        return $this->postDao->search($auth_id, $type, $searchkeyword);
+    }
+
+    /**
      * Create Post
      * @param auth user id and input data
      * @return $posts

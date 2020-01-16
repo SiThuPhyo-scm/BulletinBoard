@@ -37,7 +37,7 @@ class LoginController extends Controller
         $pwd = $request->password;
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
-            'password' => 'required|min:6',
+            'password' => 'required|min:8|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/',
         ]);
         if ($validator->fails()) {
             return redirect()->back()

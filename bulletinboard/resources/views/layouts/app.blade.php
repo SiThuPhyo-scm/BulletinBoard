@@ -30,7 +30,7 @@
                     SCM Bulletin Board
                 </h1>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
+                    <span class="nav-icon">&#9776;</span>
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -53,7 +53,6 @@
                         <!-- Right Side Of Navbar -->
                         <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
-
                             <li class="nav-item">
                                 <label class="nav-link" for="AuthUser">
                                     {{ Auth::user()->name }}

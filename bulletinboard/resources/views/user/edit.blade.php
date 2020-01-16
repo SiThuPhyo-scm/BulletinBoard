@@ -89,7 +89,7 @@
                                 <label for="require" class="col-1 col-sm-1 col-md-1 col-form-label text-danger text-md-left">*</label>
                             </div>
                             <div class="row form-group">
-                                <a href="/user/changepassword">Change Password</a>
+                                <a href="/user/password/{{$users->id}}">Change Password</a>
                             </div>
                             <div class="form-group">
                                 <div class="text-center">
