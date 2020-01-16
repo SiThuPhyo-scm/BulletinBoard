@@ -12,14 +12,14 @@
         </div>
         <div class="card-body">
             <div class="row justify-content-center">
-                <form action="/posts/search" method="POST" class="form-inline">
+                <form action="/posts" method="POST" class="form-inline">
                     @csrf
                     <div class="form-group mb-2">
                         <input type="text" name="search" value="{{session('searchKeyword')}}" class="form-control form-control-md mb-4 mr-3" placeholder="Search...">
-                        <button type="submit" class="btn btn-primary btn-md mb-4">Search</button>
-                        <a href="/post/create" class="btn btn-primary btn-md mb-4 ml-4">Add</a>
-                        <a href="/csv/upload" class="btn btn-primary btn-md mb-4 ml-4">Upload</a>
-                        <a href="/download" class="btn btn-primary btn-md mb-4 ml-4">Download</a>
+                        <button type="submit" class="form-group btn btn-primary btn-md mb-4">Search</button>
+                        <a href="/post/create" class="form-group btn btn-primary btn-md mb-4 ml-4">Add</a>
+                        <a href="/csv/upload" class="form-group btn btn-primary btn-md mb-4 ml-4">Upload</a>
+                        <a href="/download" class="form-group btn btn-primary btn-md mb-4 ml-4">Download</a>
                     </div>
                 </form>
             </div>

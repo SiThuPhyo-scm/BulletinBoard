@@ -18,6 +18,10 @@ body {
     color: #fff;
     font-size: 15px;
 }
+.nav-icon {
+    color: #fff;
+    font-size: 24px;
+}
 .card-header h3 {
     color: #03a9fc;
 }

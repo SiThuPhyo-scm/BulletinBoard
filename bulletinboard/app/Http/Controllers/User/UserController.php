@@ -31,20 +31,50 @@ class UserController extends Controller
      */
     public function index()
     {
-        session()->forget([
-            'name',
-            'email',
-            'type',
-            'phone',
-            'dob',
-            'address',
-            'search_name',
-            'search_email',
-            'search_date_from',
-            'search_date_to'
-        ]);
-        $users = $this->userService->getuser();
-        return view('user.userList', compact('users'));
+        if(Auth::check() && Auth::user()->type==0) {
+            session()->forget([
+                'name',
+                'email',
+                'type',
+                'phone',
+                'dob',
+                'address',
+                'search_name',
+                'search_email',
+                'search_date_from',
+                'search_date_to'
+            ]);
+            $users = $this->userService->getuser();
+            return view('user.userList', compact('users'));
+        }
+        else {
+            return redirect()->back();
+        }
+    }
+
+    /**
+     * Search User Detail
+     * @param [request]
+     * @return [userlist]
+     */
+    public function search(Request $request)
+    {
+        $name   = $request->name;
+        $email  = $request->email;
+        $datefrom = $request->createfrom;
+        $dateto   = $request->createto;
+        if ($email) {
+            $validator = Validator::make($request->all(), [
+                'email' => 'email'
+            ]);
+            if ($validator->fails()) {
+                return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+            }
+        }
+        $users = $this->userService->search($name, $email, $datefrom, $dateto);
+        return view('user.userlist', compact('users'));
     }
 
     /**
@@ -69,8 +99,8 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'name'  =>  'required',
             'email'     =>  'required|email|unique:users,email',
-            'password'  =>  'required|min:8',
-            'confirm_password' => 'required|min:8|same:password',
+            'password'  =>  'required|min:8|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/',
+            'confirm_password' => 'required|min:8|same:password|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/',
             'type'      => 'required',
             'profileImg'   => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
@@ -219,13 +249,22 @@ class UserController extends Controller
     {
         $user = new User;
         $auth_id = Auth::user()->id;
+        $profile  =  $request->filename;
+        if ($filename=$profile) {
+            $oldpath    =  public_path() . '/img/tempProfile/' . $filename;
+            $newpath    =  public_path() . '/img/profile/' . $filename;
+            File::move($oldpath, $newpath);
+            $profile    =  '/img/profile/' . $filename;
+        } else {
+            $profile    =  '';
+        }
         $user->name = $request->name;
         $user->email = $request->email;
         $user->type = $request->type;
         $user->phone = $request->phone;
         $user->dob = $request->dob;
         $user->address = $request->address;
-        $user->profile = $request->filename;
+        $user->profile = $profile;
         $users = $this->userService->update($auth_id, $user);
         return redirect()->intended('users')
             ->withSuccess('Profile update successfully.');
@@ -236,10 +275,31 @@ class UserController extends Controller
      *
      * @param [old password]
      * @param [new password] user change password
-     * @return
+     * @return [view] change password form with user_id
      */
-    public function password()
+    public function password($user_id)
     {
-        return view('user.password');
+        return view('user.password', compact('user_id'));
+    }
+
+    /**
+     * Store Change Password after validation
+     *
+     * @param [Request] old password and new password
+     * @param [user_id]
+     * @return redirect postlist
+     */
+    public function passwordchange(Request $request, $user_id)
+    {
+        $validator = Validator::make($request->all(), [
+            'oldpassword'    =>'required|min:8|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/',
+            'newpassword'    =>'required|min:8|different:oldpassword|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/',
+            'confirmpassword'=>'required|min:8|same:newpassword|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+        }
     }
 }

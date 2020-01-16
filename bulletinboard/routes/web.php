@@ -19,37 +19,47 @@ Auth::routes();
 
 Route::group(['middleware' => ['auth']], function () {
     //User
-    Route::get('/users', 'User\UserController@index');
+    Route::get('/users', array('as'=>'user.userlist', 'uses'=>'User\UserController@index'));
 
-    Route::get('/user/create', 'User\UserController@create');
+    Route::post('/users', array('as'=>'Search', 'uses'=>'User\UserController@search'));
 
-    Route::post('/user/createConfirm', 'User\UserController@createConfirm');
+    Route::get('/user/create', array('as'=>'user.create', 'uses'=>'User\UserController@create'));
 
-    Route::post('/user/store', 'User\UserController@store');
+    Route::post('/user/createConfirm', array('as'=>'user.creaateConfirm', 'uses'=>'User\UserController@createConfirm'));
 
-    Route::get('/user/profile', 'User\UserController@profile');
+    Route::post('/user/store', array('as'=>'user.store', 'uses'=>'User\UserController@store'));
 
-    Route::get('/user/{id}', 'User\UserController@edit');
+    Route::get('/user/profile', array('as'=>'user.profile', 'uses'=>'User\UserController@profile'));
 
-    Route::put('/user/{id}', 'User\UserController@editConfirm');
+    Route::get('/user/{id}', array('as'=>'user.edit', 'uses'=>'User\UserController@edit'));
 
-    Route::post('/user/{id}', 'User\UserController@update');
+    Route::put('/user/{id}', array('as'=>'user.editConfirm', 'uses'=>'User\UserController@editConfirm'));
 
-    Route::get('/user/password/{id}', 'User\UserController@password');
+    Route::post('/user/{id}', array('as'=>'user.update', 'uses'=>'User\UserController@update'));
+
+    Route::get('/user/password/{id}', array('as'=>'user.password', 'uses'=>'User\UserController@password'));
+
+    Route::post('/user/passwordchange/{id}', array('as'=>'user.passwordchange', 'uses'=>'User\UserController@passwordchange'));
 
     //Post
-    Route::get('/posts', 'Post\PostController@index')->name('postList');
+    Route::get('/posts', array('as'=>'post.postlist', 'uses'=>'Post\PostController@index'));
 
-    Route::get('/post/create', 'Post\PostController@create');
+    Route::post('/posts', array('as'=>'post.search', 'uses'=>'Post\PostController@search'));
 
-    Route::post('/post/create', 'Post\PostController@createConfirm');
+    Route::get('/post/create', array('as'=>'post.create', 'uses'=>'Post\PostController@create'));
 
-    Route::post('/post/store', 'Post\PostController@store');
+    Route::post('/post/create', array('as'=>'post.createConfirm', 'uses'=>'Post\PostController@createConfirm'));
 
-    Route::get('/post/{id}', 'Post\PostController@edit');
+    Route::post('/post/store', array('as'=>'post.store', 'uses'=>'Post\PostController@store'));
 
-    Route::put('/post/{id}', 'Post\PostController@editConfirm');
+    Route::get('/post/{id}', array('as'=>'post.edit', 'uses'=>'Post\PostController@edit'));
 
-    Route::post('/post/{id}', 'Post\PostController@update')->name('posts.update');
+    Route::put('/post/{id}', array('as'=>'post.editConfirm', 'uses'=>'Post\PostController@editConfirm'));
+
+    Route::post('/post/{id}', array('as'=>'post.update', 'uses'=>'Post\PostController@update'));
+
+    Route::get('/csv/upload', array('as'=>'post.upload', 'uses'=>'Post\PostController@upload'));
+
+    Route::post('/csv/upload', array('as'=>'post.import', 'uses'=>'Post\PostController@import'));
 
 });
