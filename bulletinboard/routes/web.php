@@ -21,9 +21,11 @@ Route::group(['middleware' => ['auth']], function () {
     //User
     Route::get('/users', array('as'=>'user.userlist', 'uses'=>'User\UserController@index'));
 
-    Route::post('/users', array('as'=>'Search', 'uses'=>'User\UserController@search'));
+    Route::post('/user/search', array('as'=>'Search', 'uses'=>'User\UserController@search'));
 
     Route::get('/user/create', array('as'=>'user.create', 'uses'=>'User\UserController@create'));
+
+    Route::post('/showUser', array('as'=>'ShowUserModal', 'uses'=>'User\UserController@show'));
 
     Route::post('/user/createConfirm', array('as'=>'user.creaateConfirm', 'uses'=>'User\UserController@createConfirm'));
 
@@ -44,9 +46,11 @@ Route::group(['middleware' => ['auth']], function () {
     //Post
     Route::get('/posts', array('as'=>'post.postlist', 'uses'=>'Post\PostController@index'));
 
-    Route::post('/posts', array('as'=>'post.search', 'uses'=>'Post\PostController@search'));
+    Route::post('/post/search', array('as'=>'post.search', 'uses'=>'Post\PostController@search'));
 
     Route::get('/post/create', array('as'=>'post.create', 'uses'=>'Post\PostController@create'));
+
+    Route::post('/showPost', array('as'=>'ShowPostModal', 'uses'=>'Post\PostController@show'));
 
     Route::post('/post/create', array('as'=>'post.createConfirm', 'uses'=>'Post\PostController@createConfirm'));
 
@@ -57,6 +61,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::put('/post/{id}', array('as'=>'post.editConfirm', 'uses'=>'Post\PostController@editConfirm'));
 
     Route::post('/post/{id}', array('as'=>'post.update', 'uses'=>'Post\PostController@update'));
+
+    Route::delete('post/{id}', array('as'=>'post.delete', 'uses'=>'Post\PostController@destory'));
 
     Route::get('/csv/upload', array('as'=>'post.upload', 'uses'=>'Post\PostController@upload'));
 

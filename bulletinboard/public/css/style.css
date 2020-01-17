@@ -3,6 +3,7 @@ body {
 }
 #app h1 {
     color: #fff;
+    font-size: calc(18px + (32 - 18) * ((100vw - 300px) / (1600 - 300)));
 }
 #app nav {
     background-color: #03a9fc;

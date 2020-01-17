@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('title','User List')
+
+@section('script')
+<script src="{{ asset('js/custom.js') }}"></script>
+@endsection
+
 @section('content')
 
 <div class="container">
@@ -9,22 +14,32 @@
             <h3>User List</h3>
         </div>
         <div class="card-body">
-            <div class="row justify-content-center">
-                <form action="/users" method="POST" class="form-inline">
-                    @csrf
-                    <div class="form-group mb-2">
-                        <input type="text" name="name" class="form-control form-control-md mb-4 mr-3" placeholder="Name">
-                        <input type="text" name="email" class="form-control form-control-md mb-4 mr-3" placeholder="Email">
+            <form action="/user/search" method="POST">
+                @csrf
+                <div class="row form-group">
+                    <div class="col-sm-6 col-md-3 col-lg-3">
+                        <input type="text" name="name" class="form-control form-control-md mb-4" placeholder="Name">
+                    </div>
+                    <div class="col-sm-6 col-md-3 col-lg-3">
+                        <input type="text" name="email" class="form-control form-control-md mb-4" placeholder="Email">
                         @error('email')
                             <label for="validation" class="text-danger">{{ $message }}</label>
                         @enderror
-                        <input type="date" name="createfrom" class="form-control form-control-md mb-4 mr-3" placeholder="Created From">
-                        <input type="date" name="createto" class="form-control form-control-md mb-4 mr-3" placeholder="Created To">
-                        <button type="submit" class="btn btn-primary btn-md mb-4">Search</button>
-                        <a href="/user/create" class="btn btn-primary btn-md mb-4 ml-4">Add</a>
                     </div>
-                </form>
-            </div>
+                    <div class="col-sm-6 col-md-3 col-lg-2">
+                        <input type="date" name="createfrom" class="form-control form-control-md mb-4" placeholder="Created From">
+                    </div>
+                    <div class="col-sm-6 col-md-3 col-lg-2">
+                        <input type="date" name="createto" class="form-control form-control-md mb-4" placeholder="Created To">
+                    </div>
+                    <div class="col-lg-2">
+                        <div class="form-group text-center">
+                            <button type="submit" class="btn btn-primary btn-md mb-4">Search</button>
+                            <a href="/user/create" class="btn btn-primary btn-md mb-4 ml-4">Add</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
             @if(Session::has('success'))
                 <div class="alert alert-success">
                     {{ Session::get('success') }}
@@ -72,34 +87,52 @@
 <!-- Show Post Detail with modal -->
 <div class="modal fade" id="show" role="dialog">
     <div class="modal-dialog" role="document" >
-      <div class="modal-content">
-        <div class="modal-header">
-            <h4 class="modal-name" id="user-name"></h4>
+      <div class="card modal-content">
+        <div class="card-header modal-header">
+            <h3 class="modal-name" id="show_user"></h3>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-        <div class="modal-body">
-            <p class="userName"></p>
-            <p class="userEmail"></p>
+        <div class="card-body modal-body">
+            <div class="row">
+                <label class="col-3">Name</label>
+                <label class="col-9 userName"></label>
+            </div>
+            <div class="row">
+                <label class="col-3">Email</label>
+                <label class="col-9 userEmail"></label>
+            </div>
+            <div class="row">
+                <label class="col-3">Phone</label>
+                <label class="col-9 userPhone"></label>
+            </div>
+            <div class="row">
+                <label class="col-3">Address</label>
+                <label class="col-9 userAddress"></label>
+            </div>
+            <div class="row">
+                <label class="col-3">Date of Birth</label>
+                <label class="col-9 userDob"></label>
+            </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
 </div>
 
-<!--User Detail-->
-
-<script type="text/javascript">
-    $(document).on('click','#show_user',function(){
-        var id=$this.data('showid');
-        console.log(id);
-        $.post('/showUser',{'_token':$('input[name=_token]').val() ,id:id},function(data){
-            $('.modal-name').text('User Detail');
-            $('.userName').text(data.name);
-            $('.userEmail').text(data.email);
-        });
+<script>
+$(document).on('click','#show_user',function() {
+    var id=$(this).data('showid');
+    console.log(id);
+    $.post('/showUser',{'_token':$('input[name=_token]').val() ,id:id},function(data){
+        $('.modal-name').text('User Detail');
+        $('.userName').text(data.name);
+        $('.userEmail').text(data.email);
+        $('.userPhone').text(data.phone);
+        $('.userAddress').text(data.address);
+        $('.userDob').text(data.dob);
     });
+});
 </script>
-<!--End User Detail-->
 @endsection
