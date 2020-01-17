@@ -109,4 +109,19 @@ class PostDao implements PostDaoInterface
             ->paginate(50);
         return $posts;
     }
+
+    /**
+     * SoftDelete Post
+     * @param $auth_id
+     * @param $post_id
+     * @return $posts
+     */
+    public function softDelete($auth_id, $post_id)
+    {
+        $delete_post=Post::findOrFail($post_id);
+        $delete_post->deleted_user_id = $auth_id;
+        $delete_post->deleted_at = now();
+        $delete_post->save();
+       
+    }
 }

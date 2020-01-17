@@ -53,6 +53,23 @@ class UserController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Request $request)
+    {
+        $user = User::findOrFail($request->id);
+        $name=$user->name;
+        $email=$user->email;
+        $phone=$user->phone;
+        $address=$user->address;
+        $dob=$user->dob;
+        return response()->json(array('name'=>$name,'email'=>$email,'phone'=>$phone,'address'=>$address,'dob'=>$dob));
+    }
+
+    /**
      * Search User Detail
      * @param [request]
      * @return [userlist]

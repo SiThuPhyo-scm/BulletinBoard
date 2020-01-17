@@ -64,6 +64,21 @@ class PostController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Request $request)
+    {
+        $post = Post::findOrFail($request->id);
+        $title=$post->title;
+        $desc=$post->description;
+        $status=$post->status;
+        return response()->json(array('title'=>$title,'desc'=>$desc,'status'=>$status));
+    }
+
+    /**
      * Create a new post instance after a valid registration.
      *
      * @param [Request] title and description from user input
@@ -161,6 +176,22 @@ class PostController extends Controller
         return redirect()->intended('posts')
             ->withSuccess('Post update successfully.');
     }
+
+    /**
+     * SoftDelete Post
+     *
+     * @param  [request] post_id
+     * @return [post]
+     */
+    public function destory(Request $request)
+    {
+        $post_id = $request->post_id;
+        $auth_id = Auth::user()->id;
+        $posts = $this->postService->softDelete($auth_id, $post_id);
+        return redirect()->intended('posts')
+            ->withSuccess('Post delete successfully.');
+    }
+
 
     /**
      * Show csv upload form

@@ -72,4 +72,15 @@ class PostService implements PostServiceInterface
     {
         return $this->postDao->update($user_id, $post);
     }
+
+    /**
+     * SoftDelete Post
+     * @param $auth_id
+     * @param $post_id
+     * @return $posts
+     */
+    public function softDelete($auth_id, $post_id)
+    {
+        return $this->postDao->softDelete($auth_id, $post_id);
+    }
 }
