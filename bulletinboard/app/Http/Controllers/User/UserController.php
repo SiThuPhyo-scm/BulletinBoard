@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers\User;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Contracts\Services\User\UserServiceInterface;
-use App\Services\User\UserService;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\Redirect;
 use App\Models\User;
-use Validator;
+use App\Services\User\UserService;
 use Auth;
-use Hash;
 use File;
-use Log;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Validator;
 
 class UserController extends Controller
 {
@@ -31,7 +30,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        if(Auth::check() && Auth::user()->type==0) {
+        if (Auth::check() && Auth::user()->type == 0) {
             session()->forget([
                 'name',
                 'email',
@@ -42,12 +41,11 @@ class UserController extends Controller
                 'search_name',
                 'search_email',
                 'search_date_from',
-                'search_date_to'
+                'search_date_to',
             ]);
             $users = $this->userService->getuser();
             return view('user.userList', compact('users'));
-        }
-        else {
+        } else {
             return redirect()->back();
         }
     }
@@ -61,12 +59,12 @@ class UserController extends Controller
     public function show(Request $request)
     {
         $user = User::findOrFail($request->id);
-        $name=$user->name;
-        $email=$user->email;
-        $phone=$user->phone;
-        $address=$user->address;
-        $dob=$user->dob;
-        return response()->json(array('name'=>$name,'email'=>$email,'phone'=>$phone,'address'=>$address,'dob'=>$dob));
+        $name = $user->name;
+        $email = $user->email;
+        $phone = $user->phone;
+        $address = $user->address;
+        $dob = $user->dob;
+        return response()->json(array('name' => $name, 'email' => $email, 'phone' => $phone, 'address' => $address, 'dob' => $dob));
     }
 
     /**
@@ -76,18 +74,18 @@ class UserController extends Controller
      */
     public function search(Request $request)
     {
-        $name   = $request->name;
-        $email  = $request->email;
+        $name = $request->name;
+        $email = $request->email;
         $datefrom = $request->createfrom;
-        $dateto   = $request->createto;
+        $dateto = $request->createto;
         if ($email) {
             $validator = Validator::make($request->all(), [
-                'email' => 'email'
+                'email' => 'email',
             ]);
             if ($validator->fails()) {
                 return redirect()->back()
-                        ->withErrors($validator)
-                        ->withInput();
+                    ->withErrors($validator)
+                    ->withInput();
             }
         }
         $users = $this->userService->search($name, $email, $datefrom, $dateto);
@@ -114,45 +112,45 @@ class UserController extends Controller
     public function createConfirm(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name'  =>  'required',
-            'email'     =>  'required|email|unique:users,email',
-            'password'  =>  'required|min:8|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/',
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|min:8|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/',
             'confirm_password' => 'required|min:8|same:password|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/',
-            'type'      => 'required',
-            'profileImg'   => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'type' => 'required',
+            'profileImg' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         if ($validator->fails()) {
             return redirect()->back()
-                        ->withErrors($validator)
-                        ->withInput();
+                ->withErrors($validator)
+                ->withInput();
         }
-        $name    =  $request->name;
-        $email   =  $request->email;
-        $pwd     =  $request->password;
-        $type    =  $request->type;
-        $phone   =  $request->phone;
-        $dob     =  $request->dob;
-        $address =  $request->address;
-        $profile_img =  $request->file('profileImg');
+        $name = $request->name;
+        $email = $request->email;
+        $pwd = $request->password;
+        $type = $request->type;
+        $phone = $request->phone;
+        $dob = $request->dob;
+        $address = $request->address;
+        $profile_img = $request->file('profileImg');
 
         //password show as ***
         $hide = "*";
         $pwd_hide = str_pad($hide, strlen($pwd), "*");
         //tempory save profile photo
-        if ($filename=$profile_img) {
+        if ($filename = $profile_img) {
             $filename = $profile_img->getClientOriginalName();
             $profile_img->move('img/tempProfile', $filename);
         }
-        session ([
-            'name'  => $name,
+        session([
+            'name' => $name,
             'email' => $email,
-            'type'  => $type,
+            'type' => $type,
             'phone' => $phone,
-            'dob'   => $dob,
-            'address' => $address
+            'dob' => $dob,
+            'address' => $address,
         ]);
         return view('user.createConfirm', compact(
-            'name', 'email','pwd', 'type', 'phone', 'dob', 'address', 'pwd_hide', 'filename'
+            'name', 'email', 'pwd', 'type', 'phone', 'dob', 'address', 'pwd_hide', 'filename'
         ));
     }
 
@@ -164,31 +162,31 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $auth_id    =  Auth::user()->id;
+        $auth_id = Auth::user()->id;
         //save profile image
-        $profile  =  $request->filename;
-        if ($filename=$profile) {
-            $oldpath    =  public_path() . '/img/tempProfile/' . $filename;
-            $newpath    =  public_path() . '/img/profile/' . $filename;
+        $profile = $request->filename;
+        if ($filename = $profile) {
+            $oldpath = public_path() . '/img/tempProfile/' . $filename;
+            $newpath = public_path() . '/img/profile/' . $filename;
             File::move($oldpath, $newpath);
-            $profile    =  '/img/profile/' . $filename;
+            $profile = '/img/profile/' . $filename;
         } else {
-            $profile    =  '';
+            $profile = '';
         }
-        $user_type      =  $request->type;
+        $user_type = $request->type;
         if ($user_type == null) {
             $user_type = '1';
         }
-        $user           =  new User;
-        $user->name     =  $request->name;
-        $user->email    =  $request->email;
-        $user->password =  Hash::make($request->password);
-        $user->type     =  $user_type;
-        $user->phone    =  $request->phone;
-        $user->dob      =  $request->dob;
-        $user->address  =  $request->address;
-        $user->profile  =  $profile;
-        $insert_user  =  $this->userService->store($auth_id, $user);
+        $user = new User;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->type = $user_type;
+        $user->phone = $request->phone;
+        $user->dob = $request->dob;
+        $user->address = $request->address;
+        $user->profile = $profile;
+        $insert_user = $this->userService->store($auth_id, $user);
         return redirect()->intended('users')->with('success', 'User create successfully.');
     }
 
@@ -228,27 +226,27 @@ class UserController extends Controller
         $user = User::find($user_id);
         $email = $request->email;
         $validator = Validator::make($request->all(), [
-            'name' =>  'required',
-            'email'     =>  'required|email|unique:users,email,' . $user->id,
-            'type'     =>  'required',
-            'profileImg' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'type' => 'required',
+            'profileImg' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         if ($validator->fails()) {
             return redirect()->back()
-                        ->withErrors($validator)
-                        ->withInput();
+                ->withErrors($validator)
+                ->withInput();
         }
-        $user   =   new User;
-        $user->name    =  $request->name;
-        $user->email   =  $request->email;
-        $user->type    =  $request->type;
-        $user->phone   =  $request->phone;
-        $user->dob     =  $request->dob;
-        $user->address =  $request->address;
-        $new_profile   =  $request->file('profileImg');
+        $user = new User;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->type = $request->type;
+        $user->phone = $request->phone;
+        $user->dob = $request->dob;
+        $user->address = $request->address;
+        $new_profile = $request->file('profileImg');
 
-         //tempory save new profile photo
-        if ($filename=$new_profile) {
+        //tempory save new profile photo
+        if ($filename = $new_profile) {
             $filename = $new_profile->getClientOriginalName();
             $new_profile->move('img/tempProfile', $filename);
         }
@@ -266,14 +264,14 @@ class UserController extends Controller
     {
         $user = new User;
         $auth_id = Auth::user()->id;
-        $profile  =  $request->filename;
-        if ($filename=$profile) {
-            $oldpath    =  public_path() . '/img/tempProfile/' . $filename;
-            $newpath    =  public_path() . '/img/profile/' . $filename;
+        $profile = $request->filename;
+        if ($filename = $profile) {
+            $oldpath = public_path() . '/img/tempProfile/' . $filename;
+            $newpath = public_path() . '/img/profile/' . $filename;
             File::move($oldpath, $newpath);
-            $profile    =  '/img/profile/' . $filename;
+            $profile = '/img/profile/' . $filename;
         } else {
-            $profile    =  '';
+            $profile = '';
         }
         $user->name = $request->name;
         $user->email = $request->email;
@@ -285,6 +283,20 @@ class UserController extends Controller
         $users = $this->userService->update($auth_id, $user);
         return redirect()->intended('users')
             ->withSuccess('Profile update successfully.');
+    }
+
+    /**
+     * Delete User
+     * @param [Request] user_id
+     * @return [user]
+     */
+    public function destory(Request $request)
+    {
+        $user_id = $request->user_id;
+        $auth_id = Auth::user()->id;
+        $user = $this->userService->softDelete($user_id, $auth_id);
+        return redirect()->intended('users')
+            ->withSuccess('User delete successfully.');
     }
 
     /**
@@ -306,17 +318,26 @@ class UserController extends Controller
      * @param [user_id]
      * @return redirect postlist
      */
-    public function passwordchange(Request $request, $user_id)
+    public function changepassword(Request $request, $user_id)
     {
         $validator = Validator::make($request->all(), [
-            'oldpassword'    =>'required|min:8|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/',
-            'newpassword'    =>'required|min:8|different:oldpassword|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/',
-            'confirmpassword'=>'required|min:8|same:newpassword|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/',
+            'oldpassword' => 'required|min:8|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/',
+            'newpassword' => 'required|min:8|different:oldpassword|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/',
+            'confirmpassword' => 'required|min:8|same:newpassword|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/',
         ]);
         if ($validator->fails()) {
             return redirect()->back()
-                        ->withErrors($validator)
-                        ->withInput();
+                ->withErrors($validator)
+                ->withInput();
+        }
+        $oldpwd = $request->oldpassword;
+        $newpwd = $request->newpassword;
+        $auth_id = Auth::user()->id;
+        $status = $this->userService->changepassword($oldpwd, $newpwd, $auth_id);
+        if ($status) {
+            return redirect()->intended('posts')->withSuccess('Password change successfully.');
+        } else {
+            return redirect()->back()->withError('Old password does not match.');
         }
     }
 }

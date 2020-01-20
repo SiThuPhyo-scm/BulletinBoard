@@ -4,6 +4,7 @@ namespace App\Dao\User;
 
 use App\Contracts\Dao\User\UserDaoInterface;
 use App\Models\User;
+use Hash;
 
 class UserDao implements UserDaoInterface
 {
@@ -25,7 +26,7 @@ class UserDao implements UserDaoInterface
             'u1.name as created_user_name')
             ->join('users as u1', 'u1.id', 'users.create_user_id')
             ->orderBy('users.updated_at', 'DESC')
-            ->paginate(5);
+            ->paginate(10);
           return $users;
     }
 
@@ -49,7 +50,7 @@ class UserDao implements UserDaoInterface
                 'u1.name as created_user_name')
                 ->join('users as u1', 'u1.id', 'users.create_user_id')
                 ->orderBy('users.updated_at', 'DESC')
-                ->paginate(5);
+                ->paginate(10);
 
         } else {
             if ((isset($name) && isset($email)) && (is_null($datefrom) || is_null($dateto))) {
@@ -67,7 +68,7 @@ class UserDao implements UserDaoInterface
                     ->orWhere('users.email', 'LIKE', '%' . $email . '%')
                     ->join('users as u1', 'u1.id', 'users.create_user_id')
                     ->orderBy('users.updated_at', 'DESC')
-                    ->paginate(5);
+                    ->paginate(10);
             } else if ((isset($name) || isset($email)) && (is_null($datefrom) || is_null($dateto))) {
                 $users = User::select(
                     'users.name',
@@ -83,7 +84,7 @@ class UserDao implements UserDaoInterface
                     ->where('users.email', 'LIKE', '%' . $email . '%')
                     ->join('users as u1', 'u1.id', 'users.create_user_id')
                     ->orderBy('users.updated_at', 'DESC')
-                    ->paginate(5);
+                    ->paginate(10);
             } else if (isset($datefrom) && isset($dateto)) {
                 $users = User::select(
                     'users.name',
@@ -98,7 +99,7 @@ class UserDao implements UserDaoInterface
                     ->join('users as u1', 'u1.id', 'users.create_user_id')
                     ->whereBetween('users.created_at', array($datefrom, $dateto))
                     ->orderBy('users.updated_at', 'DESC')
-                    ->paginate(5);
+                    ->paginate(10);
             }
         }
         return $users;
@@ -172,7 +173,40 @@ class UserDao implements UserDaoInterface
         $update->save();
         $users = User::where('create_user_id', $auth_id)
             ->orderBy('updated_at', 'DESC')
-            ->paginate(5);
+            ->paginate(10);
         return $users;
     }
+
+    /**
+     * Delete User
+     * @param $auth_id and $user_id
+     * @return [user]
+     */
+    public function softDelete($user_id, $auth_id)
+    {
+        $delete_user = User::findOrfail($user_id);
+        $delete_user->deleted_user_id = $auth_id;
+        $delete_user->deleted_at = now();
+        $delete_user->save();
+    }
+
+    /**
+     * Change Password
+     * @param $oldpassword and $newpassword
+     * @param $auth_id
+     * @return $status
+     */
+    public function changepassword($oldpwd, $newpwd, $auth_id)
+    {
+        $update_user = User::find($auth_id);
+        $status = Hash::check($oldpwd, $update_user->password);
+        if ($status) {
+            $update_user->password   = Hash::make($newpwd);
+            $update_user->updated_user_id = $auth_id;
+            $update_user->updated_at = now();
+            $update_user->save();
+        }
+        return $status;
+    }
+
 }

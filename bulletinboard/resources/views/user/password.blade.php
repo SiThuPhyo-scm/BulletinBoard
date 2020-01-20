@@ -42,10 +42,18 @@
                         </div>
                         <label for="require" class="col-1 col-sm-1 col-md-1 col-form-label text-danger text-md-left">*</label>
                     </div>
+                    @if(Session::has('error'))
+                        <div class="alert alert-danger text-md-center">
+                            {{ Session::get('error') }}
+                            @php
+                                Session::forget('error');
+                            @endphp
+                        </div>
+                    @endif
                     <div class="form-group row">
                         <div class="col-8 col-md-8 mx-auto">
                             <button type="submit" class="btn btn-primary  mr-4">Change</button>
-                            <a href="" class="btn btn-dark">Cancel</a>
+                            <button type="reset" class="btn btn-light">Clear</button>
                         </div>
                     </div>
                 </form>

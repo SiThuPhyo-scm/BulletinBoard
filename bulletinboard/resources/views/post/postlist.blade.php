@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="card-body">
-            <form action="/post/search" method="POST" class="form-inline">
+            <form action="/posts" method="POST" class="form-inline">
                 @csrf
                 <div class="col-md-12">
                     <div class="row form-group text-center">
@@ -60,7 +60,7 @@
                                 <td>{{$post->user->name}}</td>
                                 <td>{{$post->created_at->format('Y/m/d')}}</td>
                                 <td><a href="/post/{{$post->id}}" class="btn btn-primary">Edit</a></td>
-                                <td><a href="#deleteConfirmModal" class="btn btn-danger postDelete" onclick="deleteData({{$post->id}})" data-toggle="modal">Delete</a></td>
+                                <td><a href="#deleteConfirmModal" class="btn btn-danger postDelete" onclick="deletePost({{$post->id}})" data-toggle="modal">Delete</a></td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -103,7 +103,7 @@
         </div>
     </div>
 </div>
-<!-- User delete confirm Modal -->
+<!-- Post delete confirm Modal -->
 <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -128,29 +128,6 @@
         </div>
     </div>
 </div>
-<!-- End User delete confirm Modal -->
-<script>
-$(document).on('click','#show_post',function(){
-    var id=$(this).data('show-id');
-    console.log(id);
-    $.post('/showPost',{'_token':$('input[name=_token]').val() ,id:id},function(data){
-        $('.modal-title').text('Post Detail');
-        $('.postTitle').text(data.title);
-        $('.postDesc').text(data.desc);
-        $('.postStatus').text(data.status);
-    });
-});
-</script>
-<!--User Delete-->
-<script type="text/javascript">
-    function deleteData(id)
-    {
-        var id = id;
-        var url = "/post/"+id;
-        $(".deleteForm").attr('action', url);
-        $(".postID").attr('value',id);
-    }
-</script>
-<!--End User Delete-->
 
 @endsection
+

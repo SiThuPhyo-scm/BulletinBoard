@@ -15,11 +15,11 @@ class PostDao implements PostDaoInterface
     public function getPost($auth_id, $type)
     {
         if ($type == '0') {
-            $posts = Post::orderBy('updated_at', 'DESC')->paginate(5);
+            $posts = Post::orderBy('updated_at', 'DESC')->paginate(10);
         } else {
             $posts = Post::where('create_user_id', $auth_id)
                 ->orderBy('updated_at', 'DESC')
-                ->paginate(5);
+                ->paginate(10);
         }
         return $posts;
     }
@@ -36,26 +36,27 @@ class PostDao implements PostDaoInterface
     {
         if ($type == 0) {
             if ($searchkeyword == null) {
-              $posts = Post::orderBy('updated_at', 'DESC')->paginate(50);
+                $posts = Post::orderBy('updated_at', 'DESC')->paginate(10);
             } else {
                 $posts = Post::where('title', 'LIKE', '%' . $searchkeyword . '%')
-                  ->orwhere('description', 'LIKE', '%' . $searchkeyword . '%')
-                  ->orderBy('updated_at', 'DESC')
-                  ->paginate(50);
-            }
-          } else {
-              if ($searchkeyword == null) {
-                $posts = Post::where('create_user_id', '=', $auth_id)
-                  ->orderBy('updated_at', 'DESC')->paginate(50);
-              } else {
-                  $posts = Post::where('title', 'LIKE', '%' . $searchkeyword . '%')
                     ->orwhere('description', 'LIKE', '%' . $searchkeyword . '%')
-                    ->where('create_user_id', '=', $auth_id)
                     ->orderBy('updated_at', 'DESC')
-                    ->paginate(50);
-              }
-          }
-          return $posts;
+                    ->paginate(10);
+            }
+        } else {
+            if ($searchkeyword == null) {
+                $posts = Post::where('create_user_id', $auth_id)
+                    ->orderBy('updated_at', 'DESC')->paginate(10);
+            } else {
+                $posts = Post::where('title', 'LIKE', '%' . $searchkeyword . '%')
+                    ->where('create_user_id', $auth_id)
+                    ->orwhere('description', 'LIKE', '%' . $searchkeyword . '%')
+                    ->where('create_user_id', $auth_id)
+                    ->orderBy('updated_at', 'DESC')
+                    ->paginate(10);
+            }
+        }
+        return $posts;
     }
 
     /**
@@ -74,7 +75,7 @@ class PostDao implements PostDaoInterface
         $insert_post->save();
         $posts = Post::where('create_user_id', $auth_id)
             ->orderBy('updated_at', 'DESC')
-            ->paginate(5);
+            ->paginate(10);
         return $posts;
     }
 
@@ -106,7 +107,7 @@ class PostDao implements PostDaoInterface
         $update_post->save();
         $posts = Post::where('create_user_id', $user_id)
             ->orderBy('updated_at', 'DESC')
-            ->paginate(50);
+            ->paginate(10);
         return $posts;
     }
 
@@ -122,6 +123,27 @@ class PostDao implements PostDaoInterface
         $delete_post->deleted_user_id = $auth_id;
         $delete_post->deleted_at = now();
         $delete_post->save();
-       
+    }
+
+    /**
+     * Import CSV
+     * @param [Request] filepath
+     * @param $auth_id
+     * @return
+     */
+    public function import($auth_id, $filepath)
+    {
+        if (($handle = fopen($filepath, 'r')) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, ',')) !== FALSE ) {
+              $post = new Post;
+              $post->title = $data [0];
+              $post->description     = $data [1];
+              $post->create_user_id  = $auth_id;
+              $post->updated_user_id = $auth_id;
+              $post->save ();
+            }
+            fclose($handle);
+          }
+          return back();
     }
 }

@@ -10,4 +10,6 @@ interface UserDaoInterface
     public function profile($auth_id);
     public function edit($auth_id);
     public function update($user, $user_id);
+    public function softDelete($user_id, $auth_id);
+    public function changepassword($oldpwd, $newpwd, $auth_id);
 }
