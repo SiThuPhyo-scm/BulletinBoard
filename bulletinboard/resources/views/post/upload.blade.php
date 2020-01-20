@@ -14,7 +14,18 @@
                 <form action="/csv/upload" method="POST" enctype="multipart/form-data" class="border border-dark p-5">
                 @csrf
                     <div class="row from-group">
-                        <input type="file" id="file" name="file" class="form-control-file">
+                        <input type="file" id="file" name="file" class="form-control-file col-md-5">
+                        @error('file')
+                            <label class="text-danger">{{ $message }}</label>
+                        @enderror
+                        @if(Session::has('invalid'))
+                            <div class="alert alert-danger">
+                                {{ Session::get('invalid') }}
+                                @php
+                                    Session::forget('invalid');
+                                @endphp
+                            </div>
+                        @endif
                     </div>
                     <div class="row form-group text-center">
                         <button type="submit" class="btn btn-primary btn-md mt-4">Import File</button>

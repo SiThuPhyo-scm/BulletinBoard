@@ -81,4 +81,25 @@ class UserService implements UserServiceInterface
     {
         return $this->userDao->update($auth_id, $user);
     }
+
+    /**
+     * Delete User
+     * @param $auth_id and $user_id
+     * @return [user]
+     */
+    public function softDelete($user_id, $auth_id)
+    {
+        return $this->userDao->softDelete($user_id, $auth_id);
+    }
+
+    /**
+     * Change Password
+     * @param $oldpassword and $newpassword
+     * @param $auth_id
+     * @return $status
+     */
+    public function changepassword($oldpwd, $newpwd, $auth_id)
+    {
+        return $this->userDao->changepassword($oldpwd, $newpwd, $auth_id);
+    }
 }

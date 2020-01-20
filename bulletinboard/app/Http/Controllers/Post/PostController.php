@@ -71,11 +71,18 @@ class PostController extends Controller
      */
     public function show(Request $request)
     {
-        $post = Post::findOrFail($request->id);
-        $title=$post->title;
-        $desc=$post->description;
-        $status=$post->status;
-        return response()->json(array('title'=>$title,'desc'=>$desc,'status'=>$status));
+        $post   = Post::findOrFail($request->id);
+        $title  = $post->title;
+        $desc   = $post->description;
+        $status = $post->status;
+        if ($status == 1) {
+            $status = 'Active';
+            return response()->json(array('title'=>$title,'desc'=>$desc,'status'=>$status));
+        } else {
+            $status = 'Inactive';
+            return response()->json(array('title'=>$title,'desc'=>$desc,'status'=>$status));
+        }
+
     }
 
     /**
@@ -180,7 +187,7 @@ class PostController extends Controller
     /**
      * SoftDelete Post
      *
-     * @param  [request] post_id
+     * @param [request] post_id
      * @return [post]
      */
     public function destory(Request $request)
@@ -203,6 +210,29 @@ class PostController extends Controller
     }
 
     /**
-     * Import
+     * Import csv file to public path
+     * @param [Request] import file
+     * @return [view] postlist
      */
+    public function import(Request $request)
+    {
+        $auth_id = Auth::user()->id;
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|max:2048',
+        ]);
+        if($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
+        }
+        $file = $request->file('file');
+        $extension = $file->getClientOriginalExtension();
+        if ($extension != 'csv') {
+            return redirect()->back()->withInvalid('The file must be a file of type: csv.');
+        }
+        $filename = $file->getClientOriginalName();
+        $file->move($auth_id.'/csv', $filename);
+        $filepath = public_path() . '/'.$auth_id .'/csv/' .$filename;
+
+        $import_csv_file = $this->postService->import($auth_id, $filepath);
+        return redirect()->intended('posts');
+    }
 }

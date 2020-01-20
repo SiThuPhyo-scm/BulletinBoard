@@ -21,7 +21,7 @@
                     <div class="form-group row">
                         <label for="name" class="col-4 col-sm-4 col-md-4">Name</label>
                         <div class="col-7 col-sm-7 col-md-7">
-                            <input type="text" id="name" name="name" class="form-control">
+                            <input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}">
                             @error('name')
                                 <label for="validation" class="text-danger">{{ $message }}</label>
                             @enderror
@@ -31,7 +31,7 @@
                     <div class="form-group row">
                         <label for="email" class="col-4 col-sm-4 col-md-4">Email</label>
                         <div class="col-7 col-sm-7 col-md-7">
-                            <input type="text" id="email" name="email" class="form-control">
+                            <input type="text" id="email" name="email" class="form-control" value="{{ old('email') }}">
                             @error('email')
                                 <label for="vlaidation" class="text-danger">{{ $message }}</label>
                             @enderror
@@ -41,7 +41,7 @@
                     <div class="form-group row">
                         <label for="password" class="col-4 col-sm-4 col-md-4">Password</label>
                         <div class="col-7 col-sm-7 col-md-7">
-                            <input type="password" id="password" name="password" class="form-control">
+                            <input type="password" id="password" name="password" class="form-control" vlaue="{{ old('pwd') }}">
                             @error('password')
                                 <label for="validation" class="text-danger">{{ $message }}</label>
                             @enderror
@@ -63,8 +63,8 @@
                         <div class="col-7 col-sm-7 col-md-7">
                             <select name="type" id="type" class="form-control">
                                 <option value="" disabled selected>-- Choose Authority --</option>
-                                <option value=0>Admin</option>
-                                <option value=1>User</option>
+                                <option value=0 @if (old('type') === 0 ) {{"selected"}} @endif>Admin</option>
+                                <option value=1 @if (old('type') === 1 ) {{"selected"}} @endif>User</option>
                             </select>
                             @error('type')
                                 <label for="validation" class="text-danger">{{ $message }}</label>
@@ -75,19 +75,19 @@
                     <div class="form-group row">
                         <label for="phone" class="col-4 col-sm-4 col-md-4">Phone</label>
                         <div class="col-7 col-sm-7 col-md-7">
-                            <input type="text" id="phone" name="phone" class="form-control">
+                            <input type="text" id="phone" name="phone" class="form-control" value="{{ old('phone') }}">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="dob" class="col-4 col-sm-4 col-md-4">Date of Birth</label>
                         <div class="col-7 col-sm-7 col-md-7">
-                            <input type="date" id="dob" name="dob" class="form-control">
+                            <input type="date" id="dob" name="dob" class="form-control" value="{{ old('dob') }}">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="address" class="col-4 col-sm-4 col-md-4">Address</label>
                         <div class="col-7 col-sm-7 col-md-7">
-                            <textarea name="address" id="address" class="form-control"></textarea>
+                            <textarea name="address" id="address" class="form-control">{{ old('address') }}</textarea>
                         </div>
                     </div>
                     <div class="form-group row">

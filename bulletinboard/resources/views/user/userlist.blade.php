@@ -14,7 +14,7 @@
             <h3>User List</h3>
         </div>
         <div class="card-body">
-            <form action="/user/search" method="POST">
+            <form action="/users" method="POST">
                 @csrf
                 <div class="row form-group">
                     <div class="col-sm-6 col-md-3 col-lg-3">
@@ -27,10 +27,10 @@
                         @enderror
                     </div>
                     <div class="col-sm-6 col-md-3 col-lg-2">
-                        <input type="date" name="createfrom" class="form-control form-control-md mb-4" placeholder="Created From">
+                        <input type="text" name="dateFrom" onfocus="(this.type='date')" onblur="if(this.value==''){this.type='text'}" class="form-control mb-4" placeholder="Created From">
                     </div>
                     <div class="col-sm-6 col-md-3 col-lg-2">
-                        <input type="date" name="createto" class="form-control form-control-md mb-4" placeholder="Created To">
+                        <input type="text" name="dateTo" onfocus="(this.type='date')" onblur="if(this.value==''){this.type='text'}" class="form-control mb-4" placeholder="Created To">
                     </div>
                     <div class="col-lg-2">
                         <div class="form-group text-center">
@@ -68,8 +68,7 @@
                                 <td>{{$user->phone}}</td>
                                 <td>{{date('Y/m/d', strtotime($user->dob))}}</td>
                                 <td>{{$user->created_at->format('Y/m/d')}}</td>
-                                <td><a href="#deleteConfirmModal" class="btn btn-danger userDelete" onclick="deleteData({{$user->id}})"
-                                    data-toggle="modal">Delete</a></td>
+                                <td><a href="#deleteConfirmModal" class="btn btn-danger userDelete" onclick="deleteUser({{$user->id}})" data-toggle="modal">Delete</a></td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -120,19 +119,31 @@
       </div>
     </div>
 </div>
+<!-- Post delete confirm Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="" method="POST" class="deleteForm">
+                @csrf
+                @method('DELETE')
+                <div class="modal-body">
+                    <p>Are you sure want to delete this User?</p>
+                    <input type="hidden" id="user_id" name="user_id" class="userID" value="">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button class="btn btn-danger" type="submit">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-<script>
-$(document).on('click','#show_user',function() {
-    var id=$(this).data('showid');
-    console.log(id);
-    $.post('/showUser',{'_token':$('input[name=_token]').val() ,id:id},function(data){
-        $('.modal-name').text('User Detail');
-        $('.userName').text(data.name);
-        $('.userEmail').text(data.email);
-        $('.userPhone').text(data.phone);
-        $('.userAddress').text(data.address);
-        $('.userDob').text(data.dob);
-    });
-});
-</script>
 @endsection
+

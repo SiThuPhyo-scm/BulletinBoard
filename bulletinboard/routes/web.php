@@ -21,7 +21,7 @@ Route::group(['middleware' => ['auth']], function () {
     //User
     Route::get('/users', array('as'=>'user.userlist', 'uses'=>'User\UserController@index'));
 
-    Route::post('/user/search', array('as'=>'Search', 'uses'=>'User\UserController@search'));
+    Route::post('/users', array('as'=>'Search', 'uses'=>'User\UserController@search'));
 
     Route::get('/user/create', array('as'=>'user.create', 'uses'=>'User\UserController@create'));
 
@@ -39,14 +39,16 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('/user/{id}', array('as'=>'user.update', 'uses'=>'User\UserController@update'));
 
+    Route::delete('/user/{id}', array('as'=>'user.delete', 'uses'=>'User\UserController@destory'));
+
     Route::get('/user/password/{id}', array('as'=>'user.password', 'uses'=>'User\UserController@password'));
 
-    Route::post('/user/passwordchange/{id}', array('as'=>'user.passwordchange', 'uses'=>'User\UserController@passwordchange'));
+    Route::post('/user/passwordchange/{id}', array('as'=>'user.passwordchange', 'uses'=>'User\UserController@changepassword'));
 
     //Post
     Route::get('/posts', array('as'=>'post.postlist', 'uses'=>'Post\PostController@index'));
 
-    Route::post('/post/search', array('as'=>'post.search', 'uses'=>'Post\PostController@search'));
+    Route::post('/posts', array('as'=>'post.search', 'uses'=>'Post\PostController@search'));
 
     Route::get('/post/create', array('as'=>'post.create', 'uses'=>'Post\PostController@create'));
 
