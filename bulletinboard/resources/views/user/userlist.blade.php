@@ -1,11 +1,6 @@
 @extends('layouts.app')
 
 @section('title','User List')
-
-@section('script')
-<script src="{{ asset('js/custom.js') }}"></script>
-@endsection
-
 @section('content')
 
 <div class="container">
@@ -14,7 +9,7 @@
             <h3>User List</h3>
         </div>
         <div class="card-body">
-            <form action="/users" method="POST">
+            <form action="/user/search" method="POST">
                 @csrf
                 <div class="row form-group">
                     <div class="col-sm-6 col-md-3 col-lg-3">

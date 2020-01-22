@@ -84,14 +84,4 @@ class PostService implements PostServiceInterface
         return $this->postDao->softDelete($auth_id, $post_id);
     }
 
-    /**
-     * Import CSV
-     * @param [request] filepath
-     * @param $auth_id
-     * @return
-     */
-    public function import($auth_id, $filepath)
-    {
-        return $this->postDao->import($auth_id, $filepath);
-    }
 }

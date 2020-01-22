@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
 @section('title','Post Update Confirm')
+@section('script')
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+@endsection
+@section('style')
+<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+@endsection
 @section('content')
 
 <div class="container">
@@ -20,13 +26,13 @@
                     </div>
                     <div class="form-group row">
                         <label for="desc" class="col-4 col-sm-4 col-md-4">Description</label>
-                        <label for="desc" class="col-8 col-sm-8 col-md-8">{{$desc}}</label>
+                        <label for="desc" class="col-8 col-sm-8 col-md-8 text-justify">{{$desc}}</label>
                         <input type="hidden" name="desc" value="{{$desc}}">
                     </div>
                     <div class="form-group row">
                         <label for="status" class="col-4 col-sm-4 col-md-4">Status</label>
                         <div class="col-8 col-sm-8 col-md-8">
-                            <input type="checkbox" id="status" disabled="disabled" class="form-check-input ml-2" value="{{$status}}"
+                            <input type="checkbox" data-toggle="toggle" data-on=" " data-off=" " data-style="round" data-onstyle="success" data-offstyle="danger" id="status" data-toggle="toggle" data-onstyle="success" disabled="disabled" class="form-check-input ml-2" value="{{$status}}"
                                 @if($status=='1' ) {{"checked"}} @endif>
                                 <input type="hidden" class="form-control col-md-6" name="status" id="status" value="{{$status}}">
                             </div>

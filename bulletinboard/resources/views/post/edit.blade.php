@@ -1,6 +1,12 @@
 @extends('layouts.app')
 
 @section('title','Update Post')
+@section('script')
+<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+@endsection
+@section('style')
+<link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+@endsection
 @section('content')
 
 <div class="container">
@@ -36,7 +42,7 @@
                     <div class="form-group row">
                         <label for="status" class="col-3 col-sm-3 col-md-4">Status</label>
                         <div class="col-8 col-sm-8 col-md-6">
-                            <input type="checkbox" id="status" name="status" class="form-check-input ml-2" value="1"
+                        <input type="checkbox" data-toggle="toggle" data-on=" " data-off=" " data-style="round" data-onstyle="success" data-offstyle="danger" name="status" id="status" data-toggle="toggle" data-onstyle="success" class="form-check-input ml-2" value="1"
                             @if(old('status', $post_detail->status)=='1' ) {{"checked"}} @endif>
                         </div>
                     </div>

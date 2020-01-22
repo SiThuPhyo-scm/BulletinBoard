@@ -28,7 +28,9 @@
                         @endif
                     </div>
                     <div class="row form-group text-center">
-                        <button type="submit" class="btn btn-primary btn-md mt-4">Import File</button>
+                        <div class="col-8">
+                            <button type="submit" class="btn btn-primary btn-md mt-4">Import File</button>
+                        </div>
                     </div>
                 </form>
             </div>

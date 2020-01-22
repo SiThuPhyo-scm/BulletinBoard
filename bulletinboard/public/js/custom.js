@@ -14,9 +14,9 @@ function readURL(input) {
 // End Show Image
 
 // Show User
-$(document).on('click','#show_user',function() {
-    var id=$(this).data('showid');
-    $.post('/showUser',{'_token':$('input[name=_token]').val() ,id:id},function(data){
+$(document).on('click', '#show_user', function () {
+    var id = $(this).data('showid');
+    $.post('user/showUser', { '_token': $('input[name=_token]').val(), id: id }, function (data) {
         $('.modal-name').text('User Detail');
         $('.userName').text(data.name);
         $('.userEmail').text(data.email);
@@ -27,11 +27,20 @@ $(document).on('click','#show_user',function() {
 });
 // End Show User
 
+// User Delete
+function deleteUser(id) {
+    var id = id;
+    var url = "/user/destory" + id;
+    $(".deleteForm").attr('action', url);
+    $(".userID").attr('value', id);
+}
+// End User Delete
+
 // Show Post
-$(document).on('click','#show_post',function(){
-    var id=$(this).data('show-id');
-    $.post('/showPost',{'_token':$('input[name=_token]').val() ,id:id},function(data){
-        $('.modal-title').text('Post Detail');
+$(document).on('click', '#show_post', function () {
+    var id = $(this).data('show-id');
+    $.post('/showPost', { '_token': $('input[name=_token]').val(), id: id }, function (data) {
+        $('.modal-name').text('Post Detail');
         $('.postTitle').text(data.title);
         $('.postDesc').text(data.desc);
         $('.postStatus').text(data.status);
@@ -40,23 +49,22 @@ $(document).on('click','#show_post',function(){
 // End Show Post
 
 // Post Delete
-function deletePost(id)
-{
+function deletePost(id) {
     var id = id;
-    var url = "/post/"+id;
+    var url = "/post/" + id;
     $(".deleteForm").attr('action', url);
-    $(".postID").attr('value',id);
+    $(".postID").attr('value', id);
 }
 // End Post Delete
 
-// User Delete
-function deleteUser(id)
-{
-    var id = id;
-    var url = "/user/"+id;
-    $(".deleteForm").attr('action', url);
-    $(".userID").attr('value',id);
-}
-// End User Delete
-
-
+// Footer
+$(window).on('load resize', function () {
+    $win = window.innerHeight;
+    $height = document.getElementById('app').clientHeight;
+    if ($height < $win) {
+        $('.footer').css('width','100%');
+        $('.footer').css('bottom','0');
+        $('.footer').css('position','absolute');
+    }
+});
+// End footer

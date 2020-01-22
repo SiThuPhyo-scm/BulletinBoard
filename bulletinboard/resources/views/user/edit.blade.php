@@ -1,11 +1,6 @@
 @extends('layouts.app')
 
 @section('title','Update User')
-
-@section('script')
-<script src="{{ asset('js/custom.js') }}" defer></script>
-@endsection
-
 @section('content')
 
 <div class="container">
@@ -16,7 +11,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-8 col-sm-12">
-                    <form action="/user/{{ $users->id }}" enctype="multipart/form-data" method="POST">
+                    <form action="/user/edit/{{ $users->id }}" enctype="multipart/form-data" method="POST">
                     @csrf
                     @method('PUT')
                         <div class="col-12 col-sm-12 col-md-12 col-lg-8 mx-auto">
@@ -101,7 +96,7 @@
                     </form>
                 </div>
                 <div class="col-md-4 col-sm-0">
-                    <img src="{{ $users->profile }}" class="profile-img" alt="profile">
+                    <img src="{{ $users->profile }}" class="profile-img profile" alt="profile">
                 </div>
             </div>
         </div>

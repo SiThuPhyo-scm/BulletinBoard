@@ -63,7 +63,7 @@ class UserController extends Controller
         $email = $user->email;
         $phone = $user->phone;
         $address = $user->address;
-        $dob = $user->dob;
+        $dob = date('Y/m/d', strtotime($user->dob));
         return response()->json(array('name' => $name, 'email' => $email, 'phone' => $phone, 'address' => $address, 'dob' => $dob));
     }
 
@@ -187,7 +187,7 @@ class UserController extends Controller
         $user->address = $request->address;
         $user->profile = $profile;
         $insert_user = $this->userService->store($auth_id, $user);
-        return redirect()->intended('users')->with('success', 'User create successfully.');
+        return redirect()->intended('user')->with('success', 'User create successfully.');
     }
 
     /**
@@ -281,7 +281,7 @@ class UserController extends Controller
         $user->address = $request->address;
         $user->profile = $profile;
         $users = $this->userService->update($auth_id, $user);
-        return redirect()->intended('users')
+        return redirect()->intended('user')
             ->withSuccess('Profile update successfully.');
     }
 

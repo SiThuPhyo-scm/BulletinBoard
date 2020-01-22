@@ -10,7 +10,7 @@
         </div>
         <div class="card-body">
             <div class="col-12 col-sm-12 col-md-10 mx-auto">
-                <form action="/user/{{$user_id}}" method="post">
+                <form action="/user/update/{{$user_id}}" method="post">
                 @csrf
                     <div class="row">
                         <div class="col-6 col-sm-6 col-md-8">

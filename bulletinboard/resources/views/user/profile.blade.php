@@ -11,7 +11,7 @@
                     <h3>User Profile</h3>
                 </div>
                 <div class="col-2 col-sm-2 col-md-2">
-                    <a href="/user/{{ $user_profile->id }}" class="btn btn-primary">Edit</a>
+                    <a href="/user/edit/{{ $user_profile->id }}" class="btn btn-primary">Edit</a>
                 </div>
             </div>
         </div>
@@ -36,7 +36,7 @@
                     </div>
                     <div class="row">
                         <label for="dob" class="col-4 col-sm-4 col-md-4">Date of Birth</label>
-                        <label for="dob" class="col-8 col-sm-8 col-md-8">{{ $user_profile->dob }}</label>
+                        <label for="dob" class="col-8 col-sm-8 col-md-8">{{ date('Y/m/d', strtotime($user_profile->dob)) }}</label>
                     </div>
                     <div class="row">
                         <label for="address" class="col-4 col-sm-4 col-md-4">Address</label>
@@ -44,7 +44,7 @@
                     </div>
                 </div>
                 <div class="col-12 col-sm-4 col-md-4">
-                    <img src="{{ $user_profile->profile }}" class="profile-img" alt="profile">
+                    <img src="{{ $user_profile->profile }}" class="profile-img profile" alt="profile">
                 </div>
             </div>
         </div>
