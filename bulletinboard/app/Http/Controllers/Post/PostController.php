@@ -10,6 +10,9 @@ use App\Services\Post\PostService;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Exports\PostsExport;
+use App\Imports\PostsImport;
+use Maatwebsite\Excel\Facades\Excel;
 use Validator;
 
 class PostController extends Controller
@@ -59,6 +62,9 @@ class PostController extends Controller
         $auth_id = Auth::user()->id;
         $type = Auth::user()->type;
         $searchkeyword = $request->search;
+        session([
+            'search' => $searchkeyword
+        ]);
         $posts = $this->postService->search($auth_id, $type, $searchkeyword);
         return view('post.postlist', compact('posts'));
     }
@@ -104,6 +110,10 @@ class PostController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         }
+        session([
+            'title' => $title,
+            'desc'  => $desc
+        ]);
         return view('post.createConfirm', compact('title', 'desc'));
     }
 
@@ -199,6 +209,13 @@ class PostController extends Controller
             ->withSuccess('Post delete successfully.');
     }
 
+    /**
+     * Export CSV
+     */
+    public function export()
+    {
+        return Excel::download(new PostsExport, 'posts.csv');
+    }
 
     /**
      * Show csv upload form
@@ -218,21 +235,14 @@ class PostController extends Controller
     {
         $auth_id = Auth::user()->id;
         $validator = Validator::make($request->all(), [
-            'file' => 'required|max:2048',
+            'file' => 'required|file|mimes:csv,txt|max:2048',
         ]);
         if($validator->fails()) {
             return redirect()->back()->withErrors($validator);
         }
-        $file = $request->file('file');
-        $extension = $file->getClientOriginalExtension();
-        if ($extension != 'csv') {
-            return redirect()->back()->withInvalid('The file must be a file of type: csv.');
-        }
-        $filename = $file->getClientOriginalName();
-        $file->move($auth_id.'/csv', $filename);
-        $filepath = public_path() . '/'.$auth_id .'/csv/' .$filename;
-
-        $import_csv_file = $this->postService->import($auth_id, $filepath);
-        return redirect()->intended('posts');
+        Excel::import(new PostsImport,request()->file('file'));
+        return redirect()
+            ->intended('posts')
+            ->withSuccess('CSV file upload successfully.');
     }
 }

@@ -1,1 +1,1 @@
-Job Middleware,"In previous releases of Laravel, it was difficult to retrieve and expose custom authorization messages to end users. "
+Lazy Collections,"For example, imagine your application needs to process a multi-gigabyte log file while taking advantage of Laravel's collection methods to parse the logs."

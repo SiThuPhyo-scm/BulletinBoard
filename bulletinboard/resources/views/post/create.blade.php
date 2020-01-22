@@ -15,7 +15,7 @@
                     <div class="form-group row">
                         <label for="title" class="col-4 col-sm-4 col-md-3">Title</label>
                         <div class="col-7 col-sm-7 col-md-7">
-                            <input type="text" id="title" name="title" class="form-control" value="{{ old('title') }}">
+                            <input type="text" id="title" name="title" class="form-control" value="{{ old('title', session('title')) }}">
                             @error('title')
                                 <label class="text-danger">{{ $message }}</label>
                             @enderror
@@ -25,7 +25,7 @@
                     <div class="form-group row">
                         <label for="desc" class="col-4 col-sm-4 col-md-3">Description</label>
                         <div class="col-7 col-sm-7 col-md-7">
-                            <textarea name="desc" id="desc" class="form-control">{{ old('desc') }}</textarea>
+                            <textarea name="desc" id="desc" class="form-control">{{ old('desc', session('desc')) }}</textarea>
                             @error('desc')
                                 <label class="text-danger">{{ $message }}</label>
                             @enderror

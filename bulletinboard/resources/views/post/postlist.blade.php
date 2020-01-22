@@ -1,11 +1,6 @@
 @extends('layouts.app')
 
 @section('title','PostList')
-
-@section('script')
-<script src="{{ asset('js/custom.js') }}"></script>
-@endsection
-
 @section('content')
 
 <div class="container">
@@ -56,7 +51,7 @@
                         @foreach($posts as $key => $post)
                             <tr>
                                 <td><button class="btn btn-link" data-target="#show" data-toggle="modal" id="show_post" data-show-id="{{$post->id}}">{{$post->title}}</button></td>
-                                <td>{{$post->description}}</td>
+                                <td class="text-justify">{{$post->description}}</td>
                                 <td>{{$post->user->name}}</td>
                                 <td>{{$post->created_at->format('Y/m/d')}}</td>
                                 <td><a href="/post/{{$post->id}}" class="btn btn-primary">Edit</a></td>
@@ -80,7 +75,7 @@
     <div class="modal-dialog" role="document" >
         <div class="card modal-content">
             <div class="card-header modal-header">
-                <h3 class="modal-title" id="post-title"></h3>
+                <h3 class="modal-name" id="post-title"></h3>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="card-body modal-body">
@@ -90,7 +85,7 @@
                 </div>
                 <div class="row">
                     <label class="col-3">Description</label>
-                    <label class="col-9 postDesc"></label>
+                    <label class="col-9 postDesc text-justify"></label>
                 </div>
                 <div class="row">
                     <label class="col-3">Status</label>
