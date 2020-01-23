@@ -10,7 +10,7 @@
         </div>
         <div class="card-body">
             <div class="col-md-10 col-lg-8 mx-auto">
-                <form action="/post/create" method="POST">
+                <form action="/post/createConfirm" method="POST">
                     @csrf
                     <div class="form-group row">
                         <label for="title" class="col-4 col-sm-4 col-md-3">Title</label>

@@ -10,67 +10,60 @@ use App\Services\User\UserService;
 use Auth;
 use File;
 use Illuminate\Http\Request;
+use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Hash;
 use Validator;
 
+/**
+ * SystemName: BulletinBoard
+ * ModuleName: User
+ */
 class UserController extends Controller
 {
-
+    /**
+     * Associated with the Service
+     *
+     */
     private $userService;
 
+    /**
+     * Create a new Controller instance.
+     *
+     * @param UserServiceInterface $userService
+     */
     public function __construct(UserServiceInterface $userService)
     {
         $this->userService = $userService;
     }
 
     /**
-     * Show Users Detail
+     * User List
      *
-     * @return [view] User List
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        if (Auth::check() && Auth::user()->type == 0) {
-            session()->forget([
-                'name',
-                'email',
-                'type',
-                'phone',
-                'dob',
-                'address',
-                'search_name',
-                'search_email',
-                'search_date_from',
-                'search_date_to',
-            ]);
-            $users = $this->userService->getuser();
-            return view('user.userList', compact('users'));
-        } else {
-            return redirect()->back();
-        }
+        $users = $this->userService->getuser();
+        return view('user.userList', compact('users'));
     }
 
     /**
-     * Display the specified resource.
+     * User List with modal
      *
-     * @param  int  $id
+     * @param  Request $request
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request)
     {
-        $user = User::findOrFail($request->id);
-        $name = $user->name;
-        $email = $user->email;
-        $phone = $user->phone;
-        $address = $user->address;
-        $dob = date('Y/m/d', strtotime($user->dob));
-        return response()->json(array('name' => $name, 'email' => $email, 'phone' => $phone, 'address' => $address, 'dob' => $dob));
+        $user = $this->userService->show($user_id=$request->id);
+        return response()->json($user);
     }
 
     /**
      * Search User Detail
-     * @param [request]
-     * @return [userlist]
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
      */
     public function search(Request $request)
     {
@@ -78,16 +71,6 @@ class UserController extends Controller
         $email = $request->email;
         $datefrom = $request->createfrom;
         $dateto = $request->createto;
-        if ($email) {
-            $validator = Validator::make($request->all(), [
-                'email' => 'email',
-            ]);
-            if ($validator->fails()) {
-                return redirect()->back()
-                    ->withErrors($validator)
-                    ->withInput();
-            }
-        }
         $users = $this->userService->search($name, $email, $datefrom, $dateto);
         return view('user.userlist', compact('users'));
     }
@@ -95,7 +78,7 @@ class UserController extends Controller
     /**
      * Registration New User
      *
-     * @return [view] create user page
+     * @return \Illuminate\Http\Response
      */
     public function create()
     {
@@ -105,25 +88,13 @@ class UserController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param [Request] input data
-     *
-     * @return [View] create user confirmation page
+     * @param UserRequest $request
+     * @return \Illuminate\Http\Response
      */
-    public function createConfirm(Request $request)
+    public function createConfirm(UserRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/',
-            'confirm_password' => 'required|min:8|same:password|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/',
-            'type' => 'required',
-            'profileImg' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
+        $validator = $request->validated();
+
         $name = $request->name;
         $email = $request->email;
         $pwd = $request->password;
@@ -141,14 +112,6 @@ class UserController extends Controller
             $filename = $profile_img->getClientOriginalName();
             $profile_img->move('img/tempProfile', $filename);
         }
-        session([
-            'name' => $name,
-            'email' => $email,
-            'type' => $type,
-            'phone' => $phone,
-            'dob' => $dob,
-            'address' => $address,
-        ]);
         return view('user.createConfirm', compact(
             'name', 'email', 'pwd', 'type', 'phone', 'dob', 'address', 'pwd_hide', 'filename'
         ));
@@ -157,8 +120,8 @@ class UserController extends Controller
     /**
      * Store User Information
      *
-     * @param [Request] after validation user input
-     * @return [view] userlist
+     * @param Request $request
+     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
@@ -193,7 +156,6 @@ class UserController extends Controller
     /**
      * Show auth_user information
      *
-     * @param
      * @return [view] Profile with auth_user information
      */
     public function profile()
@@ -318,18 +280,10 @@ class UserController extends Controller
      * @param [user_id]
      * @return redirect postlist
      */
-    public function changepassword(Request $request, $user_id)
+    public function changepassword(UserRequest $request, $user_id)
     {
-        $validator = Validator::make($request->all(), [
-            'oldpassword' => 'required|min:8|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/',
-            'newpassword' => 'required|min:8|different:oldpassword|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/',
-            'confirmpassword' => 'required|min:8|same:newpassword|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/',
-        ]);
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
+        $validator = $request->validated();
+
         $oldpwd = $request->oldpassword;
         $newpwd = $request->newpassword;
         $auth_id = Auth::user()->id;
@@ -337,7 +291,7 @@ class UserController extends Controller
         if ($status) {
             return redirect()->intended('posts')->withSuccess('Password change successfully.');
         } else {
-            return redirect()->back()->withError('Old password does not match.');
+            return redirect()->back()->with('Incorrect','Old password does not match.');
         }
     }
 }

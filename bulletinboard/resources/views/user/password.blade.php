@@ -42,11 +42,11 @@
                         </div>
                         <label for="require" class="col-1 col-sm-1 col-md-1 col-form-label text-danger text-md-left">*</label>
                     </div>
-                    @if(Session::has('error'))
+                    @if(Session::has('Incorrect'))
                         <div class="alert alert-danger text-md-center">
-                            {{ Session::get('error') }}
+                            {{ Session::get('Incorrect') }}
                             @php
-                                Session::forget('error');
+                                Session::forget('Incorrect');
                             @endphp
                         </div>
                     @endif

@@ -30,7 +30,7 @@ $(document).on('click', '#show_user', function () {
 // User Delete
 function deleteUser(id) {
     var id = id;
-    var url = "/user/destory" + id;
+    var url = "/user/destory/" + id;
     $(".deleteForm").attr('action', url);
     $(".userID").attr('value', id);
 }
@@ -39,7 +39,7 @@ function deleteUser(id) {
 // Show Post
 $(document).on('click', '#show_post', function () {
     var id = $(this).data('show-id');
-    $.post('/showPost', { '_token': $('input[name=_token]').val(), id: id }, function (data) {
+    $.post('post/showPost', { '_token': $('input[name=_token]').val(), id: id }, function (data) {
         $('.modal-name').text('Post Detail');
         $('.postTitle').text(data.title);
         $('.postDesc').text(data.desc);
@@ -51,7 +51,7 @@ $(document).on('click', '#show_post', function () {
 // Post Delete
 function deletePost(id) {
     var id = id;
-    var url = "/post/" + id;
+    var url = "/post/destory/" + id;
     $(".deleteForm").attr('action', url);
     $(".postID").attr('value', id);
 }

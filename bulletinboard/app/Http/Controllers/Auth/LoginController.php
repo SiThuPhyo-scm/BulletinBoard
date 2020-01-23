@@ -45,7 +45,7 @@ class LoginController extends Controller
                 ->withInput();
         }
         if (Auth::guard('')->attempt(['email' => $email, 'password' => $pwd])) {
-            return redirect()->intended('posts');
+            return redirect()->intended('/post');
         } else {
             return back()
                 ->with('incorrect', 'Email or password incorrect!')

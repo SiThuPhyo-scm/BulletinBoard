@@ -31,6 +31,15 @@ class UserDao implements UserDaoInterface
     }
 
     /**
+     *
+     */
+    public function show($user_id)
+    {
+        $user = User::findOrFail($user_id);
+        return $user;
+    }
+
+    /**
      * Search User Details
      * @param $name, $email, $datefrom and $dateto
      * @return [userlist]
@@ -205,8 +214,8 @@ class UserDao implements UserDaoInterface
             $update_user->updated_user_id = $auth_id;
             $update_user->updated_at = now();
             $update_user->save();
+            return $status;
         }
-        return $status;
     }
 
 }

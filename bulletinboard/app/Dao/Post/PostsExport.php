@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exports;
+namespace App\Dao\Post;
 
 use App\Models\Post;
 use Auth;

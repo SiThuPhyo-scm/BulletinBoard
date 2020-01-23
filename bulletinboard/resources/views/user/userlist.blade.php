@@ -9,7 +9,7 @@
             <h3>User List</h3>
         </div>
         <div class="card-body">
-            <form action="/user/search" method="POST">
+            <form action="/user" method="POST">
                 @csrf
                 <div class="row form-group">
                     <div class="col-sm-6 col-md-3 col-lg-3">
@@ -17,9 +17,6 @@
                     </div>
                     <div class="col-sm-6 col-md-3 col-lg-3">
                         <input type="text" name="email" class="form-control form-control-md mb-4" placeholder="Email">
-                        @error('email')
-                            <label for="validation" class="text-danger">{{ $message }}</label>
-                        @enderror
                     </div>
                     <div class="col-sm-6 col-md-3 col-lg-2">
                         <input type="text" name="dateFrom" onfocus="(this.type='date')" onblur="if(this.value==''){this.type='text'}" class="form-control mb-4" placeholder="Created From">

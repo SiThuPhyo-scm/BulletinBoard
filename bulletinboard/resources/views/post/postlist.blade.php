@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="card-body">
-            <form action="/posts" method="POST" class="form-inline">
+            <form action="/post" method="POST" class="form-inline">
                 @csrf
                 <div class="col-md-12">
                     <div class="row form-group text-center">
@@ -22,8 +22,8 @@
                             <div class="form-group text-center">
                                 <button type="submit" class="form-group btn btn-primary btn-md mb-4">Search</button>
                                 <a href="/post/create" class="form-group btn btn-primary btn-md mb-4 ml-4">Add</a>
-                                <a href="/csv/upload" class="form-group btn btn-primary btn-md mb-4 ml-4">Upload</a>
-                                <a href="/download" class="form-group btn btn-primary btn-md mb-4 ml-4">Download</a>
+                                <a href="/post/upload" class="form-group btn btn-primary btn-md mb-4 ml-4">Upload</a>
+                                <a href="/post/download" class="form-group btn btn-primary btn-md mb-4 ml-4">Download</a>
                             </div>
                         </div>
                     </div>
@@ -54,7 +54,7 @@
                                 <td class="text-justify">{{$post->description}}</td>
                                 <td>{{$post->user->name}}</td>
                                 <td>{{$post->created_at->format('Y/m/d')}}</td>
-                                <td><a href="/post/{{$post->id}}" class="btn btn-primary">Edit</a></td>
+                                <td><a href="/post/edit/{{$post->id}}" class="btn btn-primary">Edit</a></td>
                                 <td><a href="#deleteConfirmModal" class="btn btn-danger postDelete" onclick="deletePost({{$post->id}})" data-toggle="modal">Delete</a></td>
                             </tr>
                         @endforeach
