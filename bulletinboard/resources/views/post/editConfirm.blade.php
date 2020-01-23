@@ -16,7 +16,7 @@
         </div>
         <div class="card-body">
             <div class="col-md-10 col-lg-8 mx-auto">
-                <form action="/post/{{$post_id}}" method="post">
+                <form action="/post/update/{{$post_id}}" method="post">
                     @csrf
 
                     <div class="form-group row">

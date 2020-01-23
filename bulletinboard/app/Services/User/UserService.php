@@ -30,6 +30,13 @@ class UserService implements UserServiceInterface
     }
 
     /**
+     *
+     */
+    public function show($user_id)
+    {
+        return $this->userDao->show($user_id);
+    }
+    /**
      * Search User Details
      * @param $name, $email, $datefrom and $dateto
      * @return [userDao] search function

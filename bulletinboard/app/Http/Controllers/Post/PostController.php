@@ -7,11 +7,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\User;
 use App\Services\Post\PostService;
+use App\Dao\Post\PostsExport;
 use Auth;
 use Illuminate\Http\Request;
+use App\Http\Requests\PostRequest;
 use Illuminate\Support\Facades\DB;
-use App\Exports\PostsExport;
-use App\Imports\PostsImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Validator;
 
@@ -66,7 +66,7 @@ class PostController extends Controller
             'search' => $searchkeyword
         ]);
         $posts = $this->postService->search($auth_id, $type, $searchkeyword);
-        return view('post.postlist', compact('posts'));
+        return view('post.postlist', ['posts'=>$posts]);
     }
 
     /**
@@ -97,19 +97,11 @@ class PostController extends Controller
      * @param [Request] title and description from user input
      * @return [view] create post confirmation page
      */
-    public function createConfirm(Request $request)
+    public function createConfirm(PostRequest $request)
     {
         $title = $request->title;
         $desc = $request->desc;
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|max:255|unique:posts,title',
-            'desc' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
+        $validator = $request->validated();
         session([
             'title' => $title,
             'desc'  => $desc
@@ -130,7 +122,7 @@ class PostController extends Controller
         $post->title = $request->title;
         $post->desc  = $request->desc;
         $posts   =  $this->postService->store($auth_id, $post);
-        return redirect()->intended('posts')
+        return redirect()->intended('post')
             ->withSuccess('Post create successfully.');
     }
 
@@ -190,7 +182,7 @@ class PostController extends Controller
         $post->desc   =  $request->desc;
         $post->status   =  $request->status;
         $posts    =  $this->postService->update($user_id, $post);
-        return redirect()->intended('posts')
+        return redirect()->intended('post')
             ->withSuccess('Post update successfully.');
     }
 
@@ -205,7 +197,7 @@ class PostController extends Controller
         $post_id = $request->post_id;
         $auth_id = Auth::user()->id;
         $posts = $this->postService->softDelete($auth_id, $post_id);
-        return redirect()->intended('posts')
+        return redirect()->intended('post')
             ->withSuccess('Post delete successfully.');
     }
 
@@ -214,7 +206,9 @@ class PostController extends Controller
      */
     public function export()
     {
-        return Excel::download(new PostsExport, 'posts.csv');
+        $auth_type = Auth::user()->type;
+        return Excel::download(new PostsExport, 'posts.xlsx');
+
     }
 
     /**
@@ -231,18 +225,20 @@ class PostController extends Controller
      * @param [Request] import file
      * @return [view] postlist
      */
-    public function import(Request $request)
+    public function import(PostRequest $request)
     {
         $auth_id = Auth::user()->id;
-        $validator = Validator::make($request->all(), [
-            'file' => 'required|file|mimes:csv,txt|max:2048',
-        ]);
+        $validator = $request->validated();
         if($validator->fails()) {
             return redirect()->back()->withErrors($validator);
         }
-        Excel::import(new PostsImport,request()->file('file'));
+        $file = $request->file('file');
+        $filename = $file->getClientOriginalName();
+        $file->move($auth_id.'/csv' . $filename);
+        $filepath = public_path() . '/'.$auth_id .'/csv/' .$filename;
+        $import_csv_file = $this->postService->import($auth_id, $filepath);
         return redirect()
-            ->intended('posts')
+            ->intended('post')
             ->withSuccess('CSV file upload successfully.');
     }
 }

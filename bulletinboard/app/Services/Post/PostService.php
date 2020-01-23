@@ -84,4 +84,12 @@ class PostService implements PostServiceInterface
         return $this->postDao->softDelete($auth_id, $post_id);
     }
 
+    /**
+     *
+     */
+    public function import($auth_id, $filepath)
+    {
+        return $this->postDao->import($auth_id, $filepath);
+    }
+
 }

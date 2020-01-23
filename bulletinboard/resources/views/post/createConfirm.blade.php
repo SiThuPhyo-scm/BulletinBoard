@@ -22,7 +22,7 @@
                     </div>
                     <div class="form-group row">
                         <label for="desc" class="col-4 col-sm4 col-md-4">Description</label>
-                        <label for="desc" class="col-6 col-sm6 col-md-6">{{$desc}}</label>
+                        <label for="desc" class="col-6 col-sm6 col-md-6 text-justify">{{$desc}}</label>
                         <input type="hidden" name="desc" value="{{$desc}}">
                     </div>
                     <div class="form-group">

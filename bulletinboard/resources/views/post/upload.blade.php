@@ -11,7 +11,7 @@
         <div class="card-body">
             <div class="col-md-10 col-lg-8 mx-auto">
                 <label for="file">Import File From:</label>
-                <form action="/csv/upload" method="POST" enctype="multipart/form-data" class="border border-dark p-5">
+                <form action="/post/import" method="POST" enctype="multipart/form-data" class="border border-dark p-5">
                 @csrf
                     <div class="row from-group">
                         <input type="file" id="file" name="file" class="form-control-file col-md-5">

@@ -40,6 +40,9 @@ class PostDao implements PostDaoInterface
             } else {
                 $posts = Post::where('title', 'LIKE', '%' . $searchkeyword . '%')
                     ->orwhere('description', 'LIKE', '%' . $searchkeyword . '%')
+                    ->orwhereHas('user', function( $query ) use($searchkeyword) {
+                        $query->where('name', 'LIKE', '%' . $searchkeyword . '%');
+                    })
                     ->orderBy('updated_at', 'DESC')
                     ->paginate(10);
             }
@@ -125,5 +128,23 @@ class PostDao implements PostDaoInterface
         $delete_post->save();
     }
 
-    
+    /**
+     *
+     */
+    public function import($auth_id, $filepath)
+    {
+        if (($handle = fopen($filepath, 'r')) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, ',')) !== FALSE ) {
+              $post = new Post;
+              $post->title = $data [0];
+              $post->description     = $data [1];
+              $post->create_user_id  = $auth_id;
+              $post->updated_user_id = $auth_id;
+              $post->save ();
+            }
+            fclose($handle);
+          }
+        return back();
+    }
+
 }
