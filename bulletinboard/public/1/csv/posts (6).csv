@@ -1,3 +1,0 @@
-"Post Title","Post Description","Posted User","Posted Date"
-"Validation Logic","If the validation rules pass, your code will keep executing normally; however, if validation fails, an exception will be thrown and the proper error response will automatically be sent back to the user.","admin","2020-01-23 01:47:44"
-"Validation / Storage Customization","To modify the form fields that are required when a new user registers with your application, or to customize how new users are stored into your database","admin","2020-01-20 07:20:14"

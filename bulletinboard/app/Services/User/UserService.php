@@ -7,12 +7,15 @@ use App\Contracts\Services\User\UserServiceInterface;
 
 class UserService implements UserServiceInterface
 {
+    /**
+     * Associated with the UserDao
+     */
     private $userDao;
 
     /**
      * Class Constructor
-     * @param OperatorUserDaoInterface
-     * @return
+     *
+     * @param UserDaoInterface $userDao
      */
     public function __construct(UserDaoInterface $userDao)
     {
@@ -22,7 +25,7 @@ class UserService implements UserServiceInterface
     /**
      * Get User Detail
      *
-     * @return $users user detail
+     * @return void
      */
     public function getuser()
     {
@@ -30,7 +33,10 @@ class UserService implements UserServiceInterface
     }
 
     /**
+     * Show User information with modal
      *
+     * @param $user_id
+     * @return void
      */
     public function show($user_id)
     {
@@ -38,18 +44,21 @@ class UserService implements UserServiceInterface
     }
     /**
      * Search User Details
-     * @param $name, $email, $datefrom and $dateto
-     * @return [userDao] search function
+     *
+     * @param $search
+     * @return void
      */
-    public function search($name, $email, $datefrom, $dateto)
+    public function search($search)
     {
-        return $this->userDao->search($name, $email, $datefrom, $dateto);
+        return $this->userDao->search($search);
     }
 
     /**
      * Registration user
-     * @param $auth_id, $users
-     * @return $users
+     *
+     * @param $auth_id
+     * @param $user
+     * @return void
      */
     public function store($auth_id, $user)
     {
@@ -57,10 +66,10 @@ class UserService implements UserServiceInterface
     }
 
     /**
-     * Show auth_user information
+     * Show User Profile
      *
-     * @param [auth_id] login user id
-     * @return [user] information where auth_id
+     * @param $auth_id
+     * @return void
      */
     public function profile($auth_id)
     {
@@ -68,10 +77,10 @@ class UserService implements UserServiceInterface
     }
 
     /**
-     * Edit auth_user information
+     * Edit User Profile
      *
-     * @param [auth_id] login user id
-     * @return [user] information
+     * @param $auth_id
+     * @return void
      */
     public function edit($auth_id)
     {
@@ -81,8 +90,9 @@ class UserService implements UserServiceInterface
     /**
      * Update User Profile
      *
-     * @param [Request] user input
-     * @param [$user_id] auth id
+     * @param $auth_id
+     * @param $user
+     * @return void
      */
     public function update($auth_id, $user)
     {
@@ -91,8 +101,10 @@ class UserService implements UserServiceInterface
 
     /**
      * Delete User
-     * @param $auth_id and $user_id
-     * @return [user]
+     *
+     * @param $user_id
+     * @param $auth_id
+     * @return void
      */
     public function softDelete($user_id, $auth_id)
     {
@@ -101,9 +113,11 @@ class UserService implements UserServiceInterface
 
     /**
      * Change Password
-     * @param $oldpassword and $newpassword
+     *
+     * @param $oldpwd
+     * @param $newpwd
      * @param $auth_id
-     * @return $status
+     * @return void
      */
     public function changepassword($oldpwd, $newpwd, $auth_id)
     {

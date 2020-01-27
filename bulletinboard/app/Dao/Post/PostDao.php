@@ -9,7 +9,9 @@ class PostDao implements PostDaoInterface
 {
     /**
      * Get Posts List
-     * @param auth user id and user type
+     *
+     * @param $auth_id
+     * @param $type
      * @return $posts
      */
     public function getPost($auth_id, $type)
@@ -25,12 +27,24 @@ class PostDao implements PostDaoInterface
     }
 
     /**
+     * Show Post Details with modal
+     *
+     * @param $post
+     * @return $post
+     */
+    public function show($post_id)
+    {
+        $post = Post::findOrFail($post_id);
+        return $post;
+    }
+
+    /**
      * Search Post Details
      *
-     * @param [auth_id]
-     * @param [type] admin or user
-     * @param [searchkeyword] User input title,description and create_user
-     * @return [posts]
+     * @param $auth_id
+     * @param $type
+     * @param $searchkeyword
+     * @return $posts
      */
     public function search($auth_id, $type, $searchkeyword)
     {
@@ -40,7 +54,7 @@ class PostDao implements PostDaoInterface
             } else {
                 $posts = Post::where('title', 'LIKE', '%' . $searchkeyword . '%')
                     ->orwhere('description', 'LIKE', '%' . $searchkeyword . '%')
-                    ->orwhereHas('user', function( $query ) use($searchkeyword) {
+                    ->orwhereHas('user', function ($query) use ($searchkeyword) {
                         $query->where('name', 'LIKE', '%' . $searchkeyword . '%');
                     })
                     ->orderBy('updated_at', 'DESC')
@@ -63,8 +77,10 @@ class PostDao implements PostDaoInterface
     }
 
     /**
-     * Create Post
-     * @param auth user id and input data
+     * Store Post Details into the database
+     *
+     * @param $auth_id
+     * @param $post
      * @return $posts
      */
     public function store($auth_id, $post)
@@ -85,8 +101,8 @@ class PostDao implements PostDaoInterface
     /**
      * Edit Post Details
      *
-     * @param [post_id] User Click Post
-     * @return [psot detail]
+     * @param $post_id
+     * @return $post_detail
      */
     public function edit($post_id)
     {
@@ -96,7 +112,9 @@ class PostDao implements PostDaoInterface
 
     /**
      * Update Post
-     * @param auth user id and input data
+     *
+     * @param $user_id
+     * @param $post
      * @return $posts
      */
     public function update($user_id, $post)
@@ -116,34 +134,40 @@ class PostDao implements PostDaoInterface
 
     /**
      * SoftDelete Post
+     *
      * @param $auth_id
      * @param $post_id
-     * @return $posts
      */
     public function softDelete($auth_id, $post_id)
     {
-        $delete_post=Post::findOrFail($post_id);
+        $delete_post = Post::findOrFail($post_id);
         $delete_post->deleted_user_id = $auth_id;
         $delete_post->deleted_at = now();
         $delete_post->save();
     }
 
     /**
+     * Import CSV file
      *
+     * @param $auth_id
+     * @param $filepath
      */
     public function import($auth_id, $filepath)
     {
         if (($handle = fopen($filepath, 'r')) !== FALSE) {
             while (($data = fgetcsv($handle, 1000, ',')) !== FALSE ) {
-              $post = new Post;
-              $post->title = $data [0];
-              $post->description     = $data [1];
-              $post->create_user_id  = $auth_id;
-              $post->updated_user_id = $auth_id;
-              $post->save ();
+                $post = new Post;
+                $post->title = $data[0];
+                $post->description = $data[1];
+                $post->create_user_id = $auth_id;
+                $post->updated_user_id = $auth_id;
+                $import_post = Post::where('title', 'LIKE', '%' . $post->title . '%');
+                if ($import_post->count() < 1) {
+                    $post->save();
+                }
             }
             fclose($handle);
-          }
+        }
         return back();
     }
 

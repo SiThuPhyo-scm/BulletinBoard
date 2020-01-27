@@ -19,10 +19,10 @@
                         <input type="text" name="email" class="form-control form-control-md mb-4" placeholder="Email">
                     </div>
                     <div class="col-sm-6 col-md-3 col-lg-2">
-                        <input type="text" name="dateFrom" onfocus="(this.type='date')" onblur="if(this.value==''){this.type='text'}" class="form-control mb-4" placeholder="Created From">
+                        <input type="text" name="startdate" onfocus="(this.type='date')" onblur="if(this.value==''){this.type='text'}" class="form-control mb-4" placeholder="Created From">
                     </div>
                     <div class="col-sm-6 col-md-3 col-lg-2">
-                        <input type="text" name="dateTo" onfocus="(this.type='date')" onblur="if(this.value==''){this.type='text'}" class="form-control mb-4" placeholder="Created To">
+                        <input type="text" name="enddate" onfocus="(this.type='date')" onblur="if(this.value==''){this.type='text'}" class="form-control mb-4" placeholder="Created To">
                     </div>
                     <div class="col-lg-2">
                         <div class="form-group text-center">
@@ -41,7 +41,7 @@
                 </div>
             @endif
             <div class="row table-scroll">
-                <table class="table table-bordered col-12 col-sm-12 col-md-12">
+                <table class="table table-striped table-bordered col-12 col-sm-12 col-md-12">
                     <thead class="text-nowrap">
                         <th>Name</th>
                         <th>Email</th>
