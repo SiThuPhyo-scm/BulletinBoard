@@ -38,7 +38,7 @@
                 </div>
             @endif
             <div class="row table-scroll">
-                <table class="table table-bordered">
+                <table class="table table-bordered table-striped">
                     <thead class="text-nowrap">
                         <th>Post Title</th>
                         <th>Post Description</th>

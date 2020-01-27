@@ -11,7 +11,7 @@ class UserDao implements UserDaoInterface
     /**
      * Get User List
      *
-     * @return $users user data
+     * @return $users
      */
     public function getuser()
     {
@@ -31,7 +31,10 @@ class UserDao implements UserDaoInterface
     }
 
     /**
+     * Show User Information with modal
      *
+     * @param $user_id
+     * @return $user
      */
     public function show($user_id)
     {
@@ -40,13 +43,18 @@ class UserDao implements UserDaoInterface
     }
 
     /**
-     * Search User Details
-     * @param $name, $email, $datefrom and $dateto
-     * @return [userlist]
+     * Search User Information
+     *
+     * @param $search
+     * @return $users
      */
-    public function search($name, $email, $datefrom, $dateto)
+    public function search($search)
     {
-        if ($name == null && $email == null && ($datefrom == null || $dateto == null)) {
+        $name = $search->name;
+        $email = $search->email;
+        $startdate = $search->startdate;
+        $enddate = $search->enddate;
+        if ($name == null && $email == null && ($startdate == null || $enddate == null)) {
             $users = User::select(
                 'users.name',
                 'users.email',
@@ -62,7 +70,7 @@ class UserDao implements UserDaoInterface
                 ->paginate(10);
 
         } else {
-            if ((isset($name) && isset($email)) && (is_null($datefrom) || is_null($dateto))) {
+            if ((isset($name) && isset($email)) && (is_null($startdate) || is_null($enddate))) {
                 $users = User::select(
                     'users.name',
                     'users.email',
@@ -78,7 +86,7 @@ class UserDao implements UserDaoInterface
                     ->join('users as u1', 'u1.id', 'users.create_user_id')
                     ->orderBy('users.updated_at', 'DESC')
                     ->paginate(10);
-            } else if ((isset($name) || isset($email)) && (is_null($datefrom) || is_null($dateto))) {
+            } else if ((isset($name) || isset($email)) && (is_null($startdate) || is_null($enddate))) {
                 $users = User::select(
                     'users.name',
                     'users.email',
@@ -94,7 +102,7 @@ class UserDao implements UserDaoInterface
                     ->join('users as u1', 'u1.id', 'users.create_user_id')
                     ->orderBy('users.updated_at', 'DESC')
                     ->paginate(10);
-            } else if (isset($datefrom) && isset($dateto)) {
+            } else if (isset($startdate) && isset($enddate)) {
                 $users = User::select(
                     'users.name',
                     'users.email',
@@ -106,7 +114,7 @@ class UserDao implements UserDaoInterface
                     'users.id',
                     'u1.name as created_user_name')
                     ->join('users as u1', 'u1.id', 'users.create_user_id')
-                    ->whereBetween('users.created_at', array($datefrom, $dateto))
+                    ->whereBetween('users.created_at', array($startdate, $enddate))
                     ->orderBy('users.updated_at', 'DESC')
                     ->paginate(10);
             }
@@ -115,9 +123,10 @@ class UserDao implements UserDaoInterface
     }
 
     /**
-     * Create User
-     * @param auth user id and user input data
-     * @return $userlist
+     * Store User Information into the database
+     *
+     * @param $auth_id
+     * @param $user
      */
     public function store($auth_id, $user)
     {
@@ -138,10 +147,10 @@ class UserDao implements UserDaoInterface
     }
 
     /**
-     * Show auth_user information
+     * Show user profile
      *
-     * @param [auth_id] login user id
-     * @return [user_profile] user detail where auth_id
+     * @param $auth_id
+     * @return $user_profile
      */
     public function profile($auth_id)
     {
@@ -150,10 +159,10 @@ class UserDao implements UserDaoInterface
     }
 
     /**
-     * Edit auth_user information
+     * Edit user profile
      *
-     * @param [auth_id] login user id
-     * @return [users] information where auth_id
+     * @param $auth_id
+     * @return $user
      */
     public function edit($auth_id)
     {
@@ -164,9 +173,9 @@ class UserDao implements UserDaoInterface
     /**
      * Update User Profile
      *
-     * @param [$user_id] auth id
-     * @param [$user] user edit data
-     * @return [userlist] update successfully message
+     * @param $auth_id
+     * @param $user
+     * @return $users
      */
     public function update($auth_id, $user)
     {
@@ -187,9 +196,10 @@ class UserDao implements UserDaoInterface
     }
 
     /**
-     * Delete User
-     * @param $auth_id and $user_id
-     * @return [user]
+     * SoftDelete User
+     *
+     * @param $user_id
+     * @param $auth_id
      */
     public function softDelete($user_id, $auth_id)
     {
@@ -201,7 +211,9 @@ class UserDao implements UserDaoInterface
 
     /**
      * Change Password
-     * @param $oldpassword and $newpassword
+     *
+     * @param $oldpwd
+     * @param $newpwd
      * @param $auth_id
      * @return $status
      */

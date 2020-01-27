@@ -22,7 +22,7 @@
                     <div class="form-group row">
                         <label for="title" class="col-3 col-sm-3 col-md-4">Title</label>
                         <div class="col-8 col-sm-8 col-md-6">
-                            <input type="text" id="title" name="title" class="form-control" value="{{$post_detail->title}}">
+                            <input type="text" id="title" name="title" class="form-control" value="{{$post_detail->title, session('title')}}">
                             @error('title')
                                 <label class="text-danger">{{ $message }}</label>
                             @enderror

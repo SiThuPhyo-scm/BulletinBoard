@@ -11,6 +11,7 @@ use Auth;
 use File;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
+use App\Http\Requests\PasswordRequest;
 use Illuminate\Support\Facades\Hash;
 use Validator;
 
@@ -21,7 +22,7 @@ use Validator;
 class UserController extends Controller
 {
     /**
-     * Associated with the Service
+     * Associated with the UserService
      *
      */
     private $userService;
@@ -48,6 +49,23 @@ class UserController extends Controller
     }
 
     /**
+     * Search User Detail
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+        $search = new User;
+        $search->name = $request->name;
+        $search->email = $request->email;
+        $search->startdate = $request->startdate;
+        $search->enddate = $request->enddate;
+        $users = $this->userService->search($search);
+        return view('user.userlist', compact('users'));
+    }
+
+    /**
      * User List with modal
      *
      * @param  Request $request
@@ -57,22 +75,6 @@ class UserController extends Controller
     {
         $user = $this->userService->show($user_id=$request->id);
         return response()->json($user);
-    }
-
-    /**
-     * Search User Detail
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function search(Request $request)
-    {
-        $name = $request->name;
-        $email = $request->email;
-        $datefrom = $request->createfrom;
-        $dateto = $request->createto;
-        $users = $this->userService->search($name, $email, $datefrom, $dateto);
-        return view('user.userlist', compact('users'));
     }
 
     /**
@@ -94,27 +96,23 @@ class UserController extends Controller
     public function createConfirm(UserRequest $request)
     {
         $validator = $request->validated();
-
-        $name = $request->name;
-        $email = $request->email;
-        $pwd = $request->password;
-        $type = $request->type;
-        $phone = $request->phone;
-        $dob = $request->dob;
-        $address = $request->address;
         $profile_img = $request->file('profileImg');
-
-        //password show as ***
-        $hide = "*";
-        $pwd_hide = str_pad($hide, strlen($pwd), "*");
-        //tempory save profile photo
+        $pwd_hide = str_pad("*", strlen($request->password), "*");
         if ($filename = $profile_img) {
             $filename = $profile_img->getClientOriginalName();
             $profile_img->move('img/tempProfile', $filename);
         }
-        return view('user.createConfirm', compact(
-            'name', 'email', 'pwd', 'type', 'phone', 'dob', 'address', 'pwd_hide', 'filename'
-        ));
+        $user = new User;
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->pwd = $request->password;
+        $user->type = $request->type;
+        $user->phone = $request->phone;
+        $user->dob = $request->dob;
+        $user->address = $request->address;
+        $user->pwd_hide = $pwd_hide;
+        $user->filename = $filename;
+        return view('user.createConfirm', compact('user'));
     }
 
     /**
@@ -154,9 +152,9 @@ class UserController extends Controller
     }
 
     /**
-     * Show auth_user information
+     * Show User Profile
      *
-     * @return [view] Profile with auth_user information
+     * @return \Illuminate\Http\Response
      */
     public function profile()
     {
@@ -169,7 +167,7 @@ class UserController extends Controller
      * Show the form for Update User
      *
      * @param $user_id
-     * @return [view] Update User with auth_user information
+     * @return \Illuminate\Http\Response
      */
     public function edit($user_id)
     {
@@ -177,27 +175,15 @@ class UserController extends Controller
         return view('user.edit', compact('users'));
     }
     /**
-     * Update user after a valid registration.
+     * Update user after a validion
      *
-     * @param [Request] input user data
-     * @param [auth user id]
-     * @return [view] Update User confirmation afer validation
+     * @param UserRequest $request
+     * @param $user_id
+     * @return \Illuminate\Http\Response
      */
-    public function editConfirm(Request $request, $user_id)
+    public function editConfirm(UserRequest $request, $user_id)
     {
-        $user = User::find($user_id);
-        $email = $request->email;
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'type' => 'required',
-            'profileImg' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
+        $validator = $request->validated();
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
@@ -218,9 +204,9 @@ class UserController extends Controller
     /**
      * Update Profile in database
      *
-     * @param [Request] edit user input
+     * @param Request $request
      * @param $user_id
-     * @return [userlist] with successfully message.
+     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $user_id)
     {
@@ -249,8 +235,9 @@ class UserController extends Controller
 
     /**
      * Delete User
-     * @param [Request] user_id
-     * @return [user]
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
      */
     public function destory(Request $request)
     {
@@ -262,11 +249,10 @@ class UserController extends Controller
     }
 
     /**
-     * Change Password
+     * Show form for Change Password
      *
-     * @param [old password]
-     * @param [new password] user change password
-     * @return [view] change password form with user_id
+     * @param $user_id
+     * @return \Illuminate\Http\Response
      */
     public function password($user_id)
     {
@@ -276,14 +262,13 @@ class UserController extends Controller
     /**
      * Store Change Password after validation
      *
-     * @param [Request] old password and new password
-     * @param [user_id]
-     * @return redirect postlist
+     * @param PasswordRequest $request
+     * @param $user_id
+     * @return \Illuminate\Http\Response
      */
-    public function changepassword(UserRequest $request, $user_id)
+    public function changepassword(PasswordRequest $request, $user_id)
     {
         $validator = $request->validated();
-
         $oldpwd = $request->oldpassword;
         $newpwd = $request->newpassword;
         $auth_id = Auth::user()->id;

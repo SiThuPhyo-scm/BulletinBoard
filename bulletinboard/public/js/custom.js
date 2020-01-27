@@ -42,7 +42,7 @@ $(document).on('click', '#show_post', function () {
     $.post('post/showPost', { '_token': $('input[name=_token]').val(), id: id }, function (data) {
         $('.modal-name').text('Post Detail');
         $('.postTitle').text(data.title);
-        $('.postDesc').text(data.desc);
+        $('.postDesc').text(data.description);
         $('.postStatus').text(data.status);
     });
 });

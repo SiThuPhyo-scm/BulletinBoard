@@ -7,12 +7,16 @@ use App\Contracts\Services\Post\PostServiceInterface;
 
 class PostService implements PostServiceInterface
 {
+    /**
+     * Associated with the PostDao
+     *
+     */
     private $postDao;
 
     /**
      * Class Constructor
-     * @param OperatorPostDaoInterface
-     * @return
+     *
+     * @param PostDaoInterface $postDao
      */
     public function __construct(PostDaoInterface $postDao)
     {
@@ -21,8 +25,10 @@ class PostService implements PostServiceInterface
 
     /**
      * Get Posts List
-     * @param auth user id and user type
-     * @return $posts
+     *
+     * @param $auth_id
+     * @param $type
+     * @return void
      */
     public function getPost($auth_id, $type)
     {
@@ -30,11 +36,29 @@ class PostService implements PostServiceInterface
     }
 
     /**
-     * Search Post Detail
-     * @param [auth_id]
-     * @param [type] Admin or User
-     * @param [searchkeyword] user input title,description and create_user
-     * @return [postDao] search function
+     * Show Post Details with modal
+     *
+     * @param $post_id
+     * @return $post
+     */
+    public function show($post_id)
+    {
+        $post= $this->postDao->show($post_id);
+        if($post->status == 1) {
+            $post->status = 'Active';
+        }
+        else {
+            $post->status = 'Inactive';
+        }
+        return $post;
+    }
+    /**
+     * Search Post Details
+     *
+     * @param $auth_id
+     * @param $type
+     * @param $searchkeyword
+     * @return void
      */
     public function search($auth_id, $type, $searchkeyword)
     {
@@ -42,9 +66,11 @@ class PostService implements PostServiceInterface
     }
 
     /**
-     * Create Post
-     * @param auth user id and input data
-     * @return $posts
+     * Store Post Details into the database
+     *
+     * @param $auth_id
+     * @param $post
+     * @return void
      */
     public function store($auth_id, $post)
     {
@@ -54,8 +80,8 @@ class PostService implements PostServiceInterface
     /**
      * Edit Post Details
      *
-     * @param [post_id] user click post
-     * @return $posts
+     * @param $post_id
+     * @return void
      */
     public function edit($post_id)
     {
@@ -65,8 +91,9 @@ class PostService implements PostServiceInterface
     /**
      * Update Post
      *
-     * @param auth user id and input data
-     * @return $post
+     * @param $user_id
+     * @param $post
+     * @return void
      */
     public function update($user_id, $post)
     {
@@ -75,9 +102,10 @@ class PostService implements PostServiceInterface
 
     /**
      * SoftDelete Post
+     *
      * @param $auth_id
      * @param $post_id
-     * @return $posts
+     * @return void
      */
     public function softDelete($auth_id, $post_id)
     {
@@ -85,7 +113,11 @@ class PostService implements PostServiceInterface
     }
 
     /**
+     * Import CSV file
      *
+     * @param $auth_id
+     * @param $filepath
+     * @return void
      */
     public function import($auth_id, $filepath)
     {

@@ -21,20 +21,20 @@
 
                     <div class="form-group row">
                         <label for="title" class="col-4 col-sm-4 col-md-4">Title</label>
-                        <label for="title" class="col-8 col-sm-8 col-md-8">{{$title}}</label>
-                        <input type="hidden" name="title" value="{{$title}}">
+                        <label for="title" class="col-8 col-sm-8 col-md-8">{{$post->title}}</label>
+                        <input type="hidden" name="title" value="{{$post->title}}">
                     </div>
                     <div class="form-group row">
                         <label for="desc" class="col-4 col-sm-4 col-md-4">Description</label>
-                        <label for="desc" class="col-8 col-sm-8 col-md-8 text-justify">{{$desc}}</label>
-                        <input type="hidden" name="desc" value="{{$desc}}">
+                        <label for="desc" class="col-8 col-sm-8 col-md-8 text-justify">{{$post->desc}}</label>
+                        <input type="hidden" name="desc" value="{{$post->desc}}">
                     </div>
                     <div class="form-group row">
                         <label for="status" class="col-4 col-sm-4 col-md-4">Status</label>
                         <div class="col-8 col-sm-8 col-md-8">
-                            <input type="checkbox" data-toggle="toggle" data-on=" " data-off=" " data-style="round" data-onstyle="success" data-offstyle="danger" id="status" data-toggle="toggle" data-onstyle="success" disabled="disabled" class="form-check-input ml-2" value="{{$status}}"
-                                @if($status=='1' ) {{"checked"}} @endif>
-                                <input type="hidden" class="form-control col-md-6" name="status" id="status" value="{{$status}}">
+                            <input type="checkbox" data-toggle="toggle" data-on=" " data-off=" " data-style="round" data-onstyle="success" data-offstyle="danger" id="status" data-toggle="toggle" data-onstyle="success" disabled="disabled" class="form-check-input ml-2" value="{{$post->status}}"
+                                @if($post->status=='1' ) {{"checked"}} @endif>
+                                <input type="hidden" class="form-control col-md-6" name="status" id="status" value="{{$post->status}}">
                             </div>
                         </div>
                     <div class="form-group">
