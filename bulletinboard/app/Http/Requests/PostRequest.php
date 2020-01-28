@@ -27,7 +27,6 @@ class PostRequest extends FormRequest
         return [
             'title' => ['required','max:255',Rule::unique('posts')->ignore($this->id, 'id')],
             'desc' => 'required',
-
         ];
     }
 }

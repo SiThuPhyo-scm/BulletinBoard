@@ -8,9 +8,9 @@ use App\Http\Controllers\Redirect;
 use App\Models\User;
 use App\Services\User\UserService;
 use Auth;
-use File;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\PasswordRequest;
 use Illuminate\Support\Facades\Hash;
 use Validator;
@@ -44,6 +44,14 @@ class UserController extends Controller
      */
     public function index()
     {
+        session()->forget([
+            'name',
+            'email',
+            'type',
+            'phone',
+            'dob',
+            'address',
+        ]);
         $users = $this->userService->getuser();
         return view('user.userList', compact('users'));
     }
@@ -96,12 +104,9 @@ class UserController extends Controller
     public function createConfirm(UserRequest $request)
     {
         $validator = $request->validated();
+        $pwd = $request->password;
         $profile_img = $request->file('profileImg');
-        $pwd_hide = str_pad("*", strlen($request->password), "*");
-        if ($filename = $profile_img) {
-            $filename = $profile_img->getClientOriginalName();
-            $profile_img->move('img/tempProfile', $filename);
-        }
+        $users = $this->userService->createConfirm($pwd, $profile_img);
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
@@ -110,8 +115,16 @@ class UserController extends Controller
         $user->phone = $request->phone;
         $user->dob = $request->dob;
         $user->address = $request->address;
-        $user->pwd_hide = $pwd_hide;
-        $user->filename = $filename;
+        $user->pwd_hide = $users->pwd_hide;
+        $user->filename = $users->filename;
+        session([
+            'name' => $request->name,
+            'email' => $request->email,
+            'type' => $request->type,
+            'phone' => $request->phone,
+            'dob' => $request->dob,
+            'address' => $request->address,
+        ]);
         return view('user.createConfirm', compact('user'));
     }
 
@@ -123,31 +136,16 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $auth_id = Auth::user()->id;
-        //save profile image
-        $profile = $request->filename;
-        if ($filename = $profile) {
-            $oldpath = public_path() . '/img/tempProfile/' . $filename;
-            $newpath = public_path() . '/img/profile/' . $filename;
-            File::move($oldpath, $newpath);
-            $profile = '/img/profile/' . $filename;
-        } else {
-            $profile = '';
-        }
-        $user_type = $request->type;
-        if ($user_type == null) {
-            $user_type = '1';
-        }
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
-        $user->type = $user_type;
+        $user->type = $request->type;
         $user->phone = $request->phone;
         $user->dob = $request->dob;
         $user->address = $request->address;
-        $user->profile = $profile;
-        $insert_user = $this->userService->store($auth_id, $user);
+        $user->profile = $request->filename;
+        $insert_user = $this->userService->store($auth_id = Auth::user()->id, $user);
         return redirect()->intended('user')->with('success', 'User create successfully.');
     }
 
@@ -158,8 +156,7 @@ class UserController extends Controller
      */
     public function profile()
     {
-        $user_id = Auth::user()->id;
-        $user_profile = $this->userService->profile($user_id);
+        $user_profile = $this->userService->profile($user_id = Auth::user()->id);
         return view('user.profile', compact('user_profile'));
     }
 
@@ -177,13 +174,15 @@ class UserController extends Controller
     /**
      * Update user after a validion
      *
-     * @param UserRequest $request
+     * @param UpdateUserRequest $request
      * @param $user_id
      * @return \Illuminate\Http\Response
      */
-    public function editConfirm(UserRequest $request, $user_id)
+    public function editConfirm(UpdateUserRequest $request, $user_id)
     {
         $validator = $request->validated();
+        $new_profile = $request->file('profileImg');
+        $filename = $this->userService->editConfirm($new_profile);
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
@@ -191,14 +190,8 @@ class UserController extends Controller
         $user->phone = $request->phone;
         $user->dob = $request->dob;
         $user->address = $request->address;
-        $new_profile = $request->file('profileImg');
-
-        //tempory save new profile photo
-        if ($filename = $new_profile) {
-            $filename = $new_profile->getClientOriginalName();
-            $new_profile->move('img/tempProfile', $filename);
-        }
-        return view('user.editConfirm', compact('user', 'filename', 'user_id'));
+        $user->filename= $filename;
+        return view('user.editConfirm', compact('user', 'user_id'));
     }
 
     /**
@@ -211,24 +204,15 @@ class UserController extends Controller
     public function update(Request $request, $user_id)
     {
         $user = new User;
-        $auth_id = Auth::user()->id;
         $profile = $request->filename;
-        if ($filename = $profile) {
-            $oldpath = public_path() . '/img/tempProfile/' . $filename;
-            $newpath = public_path() . '/img/profile/' . $filename;
-            File::move($oldpath, $newpath);
-            $profile = '/img/profile/' . $filename;
-        } else {
-            $profile = '';
-        }
         $user->name = $request->name;
         $user->email = $request->email;
         $user->type = $request->type;
         $user->phone = $request->phone;
         $user->dob = $request->dob;
         $user->address = $request->address;
-        $user->profile = $profile;
-        $users = $this->userService->update($auth_id, $user);
+        $user->profile = $request->filename;
+        $users = $this->userService->update($auth_id = Auth::user()->id, $user);
         return redirect()->intended('user')
             ->withSuccess('Profile update successfully.');
     }
@@ -244,7 +228,7 @@ class UserController extends Controller
         $user_id = $request->user_id;
         $auth_id = Auth::user()->id;
         $user = $this->userService->softDelete($user_id, $auth_id);
-        return redirect()->intended('users')
+        return redirect()->intended('user')
             ->withSuccess('User delete successfully.');
     }
 
@@ -274,7 +258,7 @@ class UserController extends Controller
         $auth_id = Auth::user()->id;
         $status = $this->userService->changepassword($oldpwd, $newpwd, $auth_id);
         if ($status) {
-            return redirect()->intended('posts')->withSuccess('Password change successfully.');
+            return redirect()->intended('post')->withSuccess('Password change successfully.');
         } else {
             return redirect()->back()->with('Incorrect','Old password does not match.');
         }

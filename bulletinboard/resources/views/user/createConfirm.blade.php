@@ -27,7 +27,7 @@
                             <div class="form-group row">
                                 <label for="password" class="col-4 col-sm-4 col-md-4">Password</label>
                                 <label for="password" class="col-8 col-sm-8 col-md-6">{{ $user->pwd_hide }}</label>
-                                <input type="hidden" name="password" value="{{ $user->pwd }}">
+                                <input type="hidden" name="password" value="{{ $user->pwd}}">
                             </div>
                             <div class="form-group row">
                                 <label for="type" class="col-4 col-sm-4 col-md-4">Type</label>
@@ -62,7 +62,7 @@
                         </div>
                         <div class="col-5 col-sm-4 col-md-4">
                             <input type="hidden" id="profile" name="filename" value="{{ $user->filename }}" class="form-control" onchange="readURL(this);">
-                            <img src="/img/tempProfile/{{$user->filename}}" class="profile-img" alt="profile">
+                            <img src="/img/tempProfile/{{$user->filename}}" class="profile-img profile" alt="profile">
                         </div>
                     </div>
                 </form>

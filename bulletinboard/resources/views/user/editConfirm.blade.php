@@ -56,8 +56,8 @@
                             </div>
                         </div>
                         <div class="col-6 col-sm-6 col-md-4">
-                            <input type="hidden" id="profile" name="filename" value="{{ $filename }}" class="form-control" onchange="readURL(this);">
-                            <img src="/img/tempProfile/{{ $filename }} " class="profile-img" alt="profile">
+                            <input type="hidden" id="profile" name="filename" value="{{ $user->filename }}" class="form-control" onchange="readURL(this);">
+                            <img src="/img/tempProfile/{{ $user->filename }} " class="profile-img profile" alt="profile">
                         </div>
                     </div>
                 </form>

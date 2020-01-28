@@ -29,8 +29,9 @@ class PostsExport implements FromCollection, WithHeadings
                 'users.name',
                 'posts.created_at'
             )->join('users', 'users.id', 'posts.create_user_id')
-             ->where('title', 'LIKE', '%' . session('search') . '%')
-             ->orwhere('description', 'LIKE', '%' . session('search') . '%')
+             ->where('title', 'LIKE', '%' . session('searchkeyword') . '%')
+             ->orwhere('description', 'LIKE', '%' . session('searchkeyword') . '%')
+             ->orwhere('users.name', 'LIKE', '%' . session('searchkeyword'). '%')
              ->orderBy('posts.updated_at', 'DESC')
              ->get();
         } else {
@@ -40,9 +41,11 @@ class PostsExport implements FromCollection, WithHeadings
                 'users.name',
                 'posts.created_at'
             )->join('users', 'users.id', 'posts.create_user_id')
-             ->where('title', 'LIKE', '%' . session('search') . '%')
+             ->where('title', 'LIKE', '%' . session('searchkeyword') . '%')
              ->where('posts.create_user_id','=',Auth::user()->id)
-             ->orwhere('description', 'LIKE', '%' . session('search') . '%')
+             ->orwhere('description', 'LIKE', '%' . session('searchkeyword') . '%')
+             ->where('posts.create_user_id','=',Auth::user()->id)
+             ->orwhere('users.name', 'LIKE', '%' . session('searchkeyword') . '%')
              ->where('posts.create_user_id','=',Auth::user()->id)
              ->orderBy('posts.updated_at', 'DESC')
              ->get();

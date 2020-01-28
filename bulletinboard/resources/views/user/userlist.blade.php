@@ -11,7 +11,7 @@
         <div class="card-body">
             <form action="/user" method="POST">
                 @csrf
-                <div class="row form-group">
+                <div class="row">
                     <div class="col-sm-6 col-md-3 col-lg-3">
                         <input type="text" name="name" class="form-control form-control-md mb-4" placeholder="Name">
                     </div>

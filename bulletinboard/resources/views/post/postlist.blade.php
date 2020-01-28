@@ -37,6 +37,14 @@
                     @endphp
                 </div>
             @endif
+            @if(Session::has('incorrect'))
+                <div class="alert alert-danger">
+                    {{ Session::get('incorrect') }}
+                    @php
+                        Session::forget('incorrect')
+                    @endphp
+                </div>
+            @endif
             <div class="row table-scroll">
                 <table class="table table-bordered table-striped">
                     <thead class="text-nowrap">
@@ -64,7 +72,7 @@
             <div class="row">
                 <!-- pagination -->
                 <ul class="pagination col-md-12 justify-content-center mt-2">
-                    {{$posts->links()}}
+                    {{ $posts->links() }}
                 </ul>
             </div>
         </div>
