@@ -7,10 +7,10 @@ interface UserDaoInterface
     public function getuser();
     public function search($search);
     public function show($user_id);
-    public function store($auth_id, $post);
+    public function store($auth_id, $users);
     public function profile($auth_id);
     public function edit($auth_id);
-    public function update($user, $user_id);
+    public function update($users, $user_id);
     public function softDelete($user_id, $auth_id);
     public function changepassword($oldpwd, $newpwd, $auth_id);
 }

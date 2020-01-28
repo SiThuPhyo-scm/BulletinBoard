@@ -128,17 +128,17 @@ class UserDao implements UserDaoInterface
      * @param $auth_id
      * @param $user
      */
-    public function store($auth_id, $user)
+    public function store($auth_id, $users)
     {
         $insert_user = new User([
-        'name'            =>  $user->name,
-        'email'           =>  $user->email,
-        'password'        =>  $user->password,
-        'profile'         =>  $user->profile,
-        'type'            =>  $user->type,
-        'phone'           =>  $user->phone,
-        'address'         =>  $user->address,
-        'dob'             =>  $user->dob,
+        'name'            =>  $users->name,
+        'email'           =>  $users->email,
+        'password'        =>  $users->password,
+        'profile'         =>  $users->profile,
+        'type'            =>  $users->type,
+        'phone'           =>  $users->phone,
+        'address'         =>  $users->address,
+        'dob'             =>  $users->dob,
         'create_user_id'  =>  $auth_id,
         'updated_user_id' =>  $auth_id
         ]);
@@ -174,18 +174,18 @@ class UserDao implements UserDaoInterface
      * Update User Profile
      *
      * @param $auth_id
-     * @param $user
+     * @param $users
      * @return $users
      */
-    public function update($auth_id, $user)
+    public function update($auth_id, $users)
     {
         $update = User::find($auth_id);
-        $update->name = $user->name;
-        $update->email = $user->email;
-        $update->type = $user->type;
-        $update->phone = $user->phone;
-        $update->address = $user->address;
-        $update->profile = $user->profile;
+        $update->name = $users->name;
+        $update->email = $users->email;
+        $update->type = $users->type;
+        $update->phone = $users->phone;
+        $update->address = $users->address;
+        $update->profile = $users->profile;
         $update->updated_user_id = $auth_id;
         $update->updated_at = now();
         $update->save();

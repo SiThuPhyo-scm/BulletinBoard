@@ -151,6 +151,7 @@ class PostDao implements PostDaoInterface
      *
      * @param $auth_id
      * @param $filepath
+     * @return $message
      */
     public function import($auth_id, $filepath)
     {
@@ -164,11 +165,14 @@ class PostDao implements PostDaoInterface
                 $import_post = Post::where('title', 'LIKE', '%' . $post->title . '%');
                 if ($import_post->count() < 1) {
                     $post->save();
+                    $message = '1';
+                } else {
+                    $message = '0';
                 }
             }
             fclose($handle);
         }
-        return back();
+        return $message;
     }
 
 }

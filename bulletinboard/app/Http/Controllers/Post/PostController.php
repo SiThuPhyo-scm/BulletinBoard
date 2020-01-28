@@ -62,6 +62,9 @@ class PostController extends Controller
      */
     public function search(Request $request)
     {
+        session([
+            'searchkeyword' => $request->search
+        ]);
         $posts = $this->postService->search($auth_id = Auth::user()->id, $type = Auth::user()->type, $searchkeyword = $request->search);
         return view('post.postlist', compact('posts'));
     }
@@ -194,7 +197,6 @@ class PostController extends Controller
      */
     public function export()
     {
-        $auth_type = Auth::user()->type;
         return Excel::download(new PostsExport, 'posts.csv');
     }
 
@@ -220,11 +222,17 @@ class PostController extends Controller
         $validator = $request->validated();
         $file = $request->file('file');
         $filename = $file->getClientOriginalName();
-        $file->move($auth_id . '/csv' , $filename);
-        $filepath = public_path() . '/'.$auth_id .'/csv/' .$filename;
-        $import_csv_file = $this->postService->import($auth_id, $filepath);
-        return redirect()
-            ->intended('post')
-            ->withSuccess('CSV file upload successfully.');
+        $file->move( 'csv/' . $auth_id , $filename);
+        $filepath = public_path() . '/csv/' . '/'.$auth_id .'/' .$filename;
+        $message = $this->postService->import($auth_id, $filepath);
+        if($message == 1){
+            return redirect()
+                ->intended('post')
+                ->withSuccess('CSV file Upload Successfully');
+        } else {
+            return redirect()
+                ->intended('post')
+                ->with('incorrect', 'CSV file Upload Unsucess beacause CSV title already exit');
+        }
     }
 }
