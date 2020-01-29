@@ -14,39 +14,7 @@ class PostDao implements PostDaoInterface
      * @param $type
      * @return $posts
      */
-    public function getPost($auth_id, $type)
-    {
-        if ($type == '0') {
-            $posts = Post::orderBy('updated_at', 'DESC')->paginate(10);
-        } else {
-            $posts = Post::where('create_user_id', $auth_id)
-                ->orderBy('updated_at', 'DESC')
-                ->paginate(10);
-        }
-        return $posts;
-    }
-
-    /**
-     * Show Post Details with modal
-     *
-     * @param $post
-     * @return $post
-     */
-    public function show($post_id)
-    {
-        $post = Post::findOrFail($post_id);
-        return $post;
-    }
-
-    /**
-     * Search Post Details
-     *
-     * @param $auth_id
-     * @param $type
-     * @param $searchkeyword
-     * @return $posts
-     */
-    public function search($auth_id, $type, $searchkeyword)
+    public function getPost($auth_id, $type, $searchkeyword)
     {
         if ($type == 0) {
             if ($searchkeyword == null) {
@@ -74,6 +42,19 @@ class PostDao implements PostDaoInterface
             }
         }
         return $posts;
+    }
+
+
+    /**
+     * Show Post Details with modal
+     *
+     * @param $post
+     * @return $post
+     */
+    public function show($post_id)
+    {
+        $post = Post::findOrFail($post_id);
+        return $post;
     }
 
     /**

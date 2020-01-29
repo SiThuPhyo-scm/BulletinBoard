@@ -16,7 +16,7 @@
                 <div class="col-md-12">
                     <div class="row form-group text-center">
                         <div class="col-sm-12 col-md-5 col-lg-5 text-md-right">
-                            <input type="text" name="search" value="{{session('searchKeyword')}}" class="form-control form-control-md mb-4" placeholder="Search...">
+                            <input type="text" name="search" class="form-control form-control-md mb-4" placeholder="Search...">
                         </div>
                         <div class="col-md-7 col-lg-7">
                             <div class="form-group text-center">

@@ -30,9 +30,9 @@ class PostService implements PostServiceInterface
      * @param $type
      * @return void
      */
-    public function getPost($auth_id, $type)
+    public function getPost($auth_id, $type, $searchkeyword)
     {
-        return $this->postDao->getPost($auth_id, $type);
+        return $this->postDao->getPost($auth_id, $type, $searchkeyword);
     }
 
     /**
@@ -52,19 +52,7 @@ class PostService implements PostServiceInterface
         }
         return $post;
     }
-    /**
-     * Search Post Details
-     *
-     * @param $auth_id
-     * @param $type
-     * @param $searchkeyword
-     * @return void
-     */
-    public function search($auth_id, $type, $searchkeyword)
-    {
-        return $this->postDao->search($auth_id, $type, $searchkeyword);
-    }
-
+    
     /**
      * Store Post Details into the database
      *

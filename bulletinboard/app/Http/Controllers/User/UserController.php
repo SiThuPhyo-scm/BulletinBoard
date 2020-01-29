@@ -45,6 +45,7 @@ class UserController extends Controller
     public function index()
     {
         session()->forget([
+            'searchkeyword',
             'name',
             'email',
             'type',
@@ -52,7 +53,7 @@ class UserController extends Controller
             'dob',
             'address',
         ]);
-        $users = $this->userService->getuser();
+        $users = $this->userService->search($search=session('search'));
         return view('user.userList', compact('users'));
     }
 
@@ -69,6 +70,9 @@ class UserController extends Controller
         $search->email = $request->email;
         $search->startdate = $request->startdate;
         $search->enddate = $request->enddate;
+        session([
+            'search' => $search,
+        ]);
         $users = $this->userService->search($search);
         return view('user.userlist', compact('users'));
     }
@@ -92,6 +96,9 @@ class UserController extends Controller
      */
     public function create()
     {
+        session()->forget([
+            'search'
+        ]);
         return view('user.create');
     }
 
@@ -156,6 +163,9 @@ class UserController extends Controller
      */
     public function profile()
     {
+        session()->forget([
+            'search'
+        ]);
         $user_profile = $this->userService->profile($user_id = Auth::user()->id);
         return view('user.profile', compact('user_profile'));
     }
@@ -225,6 +235,9 @@ class UserController extends Controller
      */
     public function destory(Request $request)
     {
+        session()->forget([
+            'search'
+        ]);
         $user_id = $request->user_id;
         $auth_id = Auth::user()->id;
         $user = $this->userService->softDelete($user_id, $auth_id);

@@ -18,11 +18,15 @@ $(document).on('click', '#show_user', function () {
     var id = $(this).data('showid');
     $.post('user/showUser', { '_token': $('input[name=_token]').val(), id: id }, function (data) {
         $('.modal-name').text('User Detail');
+        $('.userProfile').append("<img src='"+data.profile+"' class='profile profile-img'>");
         $('.userName').text(data.name);
         $('.userEmail').text(data.email);
         $('.userPhone').text(data.phone);
         $('.userAddress').text(data.address);
         $('.userDob').text(data.dob);
+    });
+    $("button").click(function(){
+        location.reload(true);
     });
 });
 // End Show User

@@ -46,11 +46,11 @@ class PostController extends Controller
     public function index()
     {
         session()->forget([
-            'searchKeyword',
+            'search',
             'title',
             'desc'
         ]);
-        $posts = $this->postService->getPost($auth_id = Auth::user()->id, $type = Auth::user()->type);
+        $posts = $this->postService->getPost($auth_id = Auth::user()->id, $type = Auth::user()->type, $searchkeyword=session('searchkeyword'));
         return view('post.postList', compact('posts'));
     }
 
@@ -65,7 +65,8 @@ class PostController extends Controller
         session([
             'searchkeyword' => $request->search
         ]);
-        $posts = $this->postService->search($auth_id = Auth::user()->id, $type = Auth::user()->type, $searchkeyword = $request->search);
+        $searchkeyword = $request->search;
+        $posts = $this->postService->getPost($auth_id = Auth::user()->id, $type = Auth::user()->type, $searchkeyword = $request->search);
         return view('post.postlist', compact('posts'));
     }
 
@@ -88,6 +89,9 @@ class PostController extends Controller
      */
     public function create()
     {
+        session()->forget([
+            'searchkeyword'
+        ]);
         return view('post.create');
     }
 
@@ -134,6 +138,9 @@ class PostController extends Controller
      */
     public function edit($post_id)
     {
+        session()->forget([
+            'searchkeyword'
+        ]);
         $post_detail = $this->postService->edit($post_id);
         return view('post.edit', compact('post_detail'));
     }
@@ -155,6 +162,10 @@ class PostController extends Controller
         if (is_null($post->status)) {
             $post->status = '0';
         }
+        session([
+            'title' => $request->title,
+            'desc'  => $request->desc
+        ]);
         return view('post.editConfirm', compact('post','post_id'));
     }
 
@@ -185,6 +196,9 @@ class PostController extends Controller
      */
     public function destory(Request $request)
     {
+        session()->forget([
+            'searchkeyword'
+        ]);
         $posts = $this->postService->softDelete($auth_id = Auth::user()->id, $post_id = $request->post_id);
         return redirect()->intended('post')
             ->withSuccess('Post delete successfully.');
@@ -207,6 +221,9 @@ class PostController extends Controller
      */
     public function upload()
     {
+        session()->forget([
+            'searchkeyword'
+        ]);
         return view('post.upload');
     }
 
@@ -232,7 +249,7 @@ class PostController extends Controller
         } else {
             return redirect()
                 ->intended('post')
-                ->with('incorrect', 'CSV file Upload Unsucess beacause CSV title already exit');
+                ->with('incorrect', 'CSV file Upload Unsucess beacause CSV title has already been taken');
         }
     }
 }

@@ -50,11 +50,7 @@ class UserDao implements UserDaoInterface
      */
     public function search($search)
     {
-        $name = $search->name;
-        $email = $search->email;
-        $startdate = $search->startdate;
-        $enddate = $search->enddate;
-        if ($name == null && $email == null && ($startdate == null || $enddate == null)) {
+        if ($search == null) {
             $users = User::select(
                 'users.name',
                 'users.email',
@@ -68,9 +64,23 @@ class UserDao implements UserDaoInterface
                 ->join('users as u1', 'u1.id', 'users.create_user_id')
                 ->orderBy('users.updated_at', 'DESC')
                 ->paginate(10);
-
+        }
+        elseif ($search->name == null && $search->email == null && ($search->startdate == null || $search->enddate == null)) {
+            $users = User::select(
+                'users.name',
+                'users.email',
+                'users.phone',
+                'users.dob',
+                'users.address',
+                'users.created_at',
+                'users.updated_at',
+                'users.id',
+                'u1.name as created_user_name')
+                ->join('users as u1', 'u1.id', 'users.create_user_id')
+                ->orderBy('users.updated_at', 'DESC')
+                ->paginate(10);
         } else {
-            if ((isset($name) && isset($email)) && (is_null($startdate) || is_null($enddate))) {
+            if ((isset($search->name) && isset($search->email)) && (is_null($search->startdate) || is_null($search->enddate))) {
                 $users = User::select(
                     'users.name',
                     'users.email',
@@ -81,12 +91,12 @@ class UserDao implements UserDaoInterface
                     'users.updated_at',
                     'users.id',
                     'u1.name as created_user_name')
-                    ->where('users.name', 'LIKE', '%' . $name . '%')
-                    ->orWhere('users.email', 'LIKE', '%' . $email . '%')
+                    ->where('users.name', 'LIKE', '%' . $search->name . '%')
+                    ->orWhere('users.email', 'LIKE', '%' . $search->email . '%')
                     ->join('users as u1', 'u1.id', 'users.create_user_id')
                     ->orderBy('users.updated_at', 'DESC')
                     ->paginate(10);
-            } else if ((isset($name) || isset($email)) && (is_null($startdate) || is_null($enddate))) {
+            } else if ((isset($search->name) || isset($search->email)) && (is_null($search->startdate) || is_null($search->enddate))) {
                 $users = User::select(
                     'users.name',
                     'users.email',
@@ -97,12 +107,12 @@ class UserDao implements UserDaoInterface
                     'users.updated_at',
                     'users.id',
                     'u1.name as created_user_name')
-                    ->where('users.name', 'LIKE', '%' . $name . '%')
-                    ->where('users.email', 'LIKE', '%' . $email . '%')
+                    ->where('users.name', 'LIKE', '%' . $search->name . '%')
+                    ->where('users.email', 'LIKE', '%' . $search->email . '%')
                     ->join('users as u1', 'u1.id', 'users.create_user_id')
                     ->orderBy('users.updated_at', 'DESC')
                     ->paginate(10);
-            } else if (isset($startdate) && isset($enddate)) {
+            } else if (isset($search->startdate) && isset($search->enddate)) {
                 $users = User::select(
                     'users.name',
                     'users.email',
@@ -114,7 +124,7 @@ class UserDao implements UserDaoInterface
                     'users.id',
                     'u1.name as created_user_name')
                     ->join('users as u1', 'u1.id', 'users.create_user_id')
-                    ->whereBetween('users.created_at', array($startdate, $enddate))
+                    ->whereBetween('users.created_at', array($search->startdate, $search->enddate))
                     ->orderBy('users.updated_at', 'DESC')
                     ->paginate(10);
             }
