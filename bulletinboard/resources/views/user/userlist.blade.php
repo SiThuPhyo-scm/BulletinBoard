@@ -77,13 +77,16 @@
 </div>
 <!-- Show Post Detail with modal -->
 <div class="modal fade" id="show" role="dialog">
-    <div class="modal-dialog" role="document" >
+    <div class="modal-dialog col-8" role="document" >
       <div class="card modal-content">
         <div class="card-header modal-header">
             <h3 class="modal-name" id="show_user"></h3>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <div class="card-body modal-body">
+            <div class="row text-center">
+                <label class="col-12 userProfile"></label>
+            </div>
             <div class="row">
                 <label class="col-3">Name</label>
                 <label class="col-9 userName"></label>

@@ -44,7 +44,7 @@
                     </div>
                 </div>
                 <div class="col-12 col-sm-4 col-md-4">
-                    <img src="{{ $user_profile->profile }}" class="profile-img profile" alt="profile">
+                    <img src="{{ $user_profile->profile }}" class="profile-img profile">
                 </div>
             </div>
         </div>

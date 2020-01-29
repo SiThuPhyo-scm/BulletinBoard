@@ -22,7 +22,7 @@
                     <div class="form-group row">
                         <label for="title" class="col-3 col-sm-3 col-md-4">Title</label>
                         <div class="col-8 col-sm-8 col-md-6">
-                            <input type="text" id="title" name="title" class="form-control" value="{{$post_detail->title, session('title')}}">
+                            <input type="text" id="title" name="title" class="form-control" value="{{ old('title', $post_detail->title) }}">
                             @error('title')
                                 <label class="text-danger">{{ $message }}</label>
                             @enderror
@@ -32,7 +32,7 @@
                     <div class="form-group row">
                         <label for="desc" class="col-3 col-sm-3 col-md-4">Description</label>
                         <div class="col-8 col-sm-8 col-md-6">
-                            <textarea name="desc" id="desc" class="form-control">{{$post_detail->description}}</textarea>
+                            <textarea name="desc" id="desc" class="form-control">{{ old('desc', $post_detail->description) }}</textarea>
                             @error('desc')
                                 <label class="text-danger">{{ $message }}</label>
                             @enderror

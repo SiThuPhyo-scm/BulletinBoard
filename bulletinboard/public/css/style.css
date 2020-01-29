@@ -49,6 +49,8 @@ table tr td {
 .profile-img {
     width: 150px;
     height: 150px;
+    background: url("http://placehold.it/180") no-repeat center;
+    background-size: cover;
 }
 .profile {
     border: solid 1px #000;
