@@ -56,7 +56,7 @@
                             <tr>
                                 <td><button class="btn btn-link" data-target="#show" data-toggle="modal" id="show_user" data-showid="{{$user->id}}">{{$user->name}}</button></td>
                                 <td>{{$user->email}}</td>
-                                <td>{{$user->created_user_name}}</td>
+                                <td>{{$user->createuser->name}}</td>
                                 <td>{{$user->phone}}</td>
                                 <td>{{date('Y/m/d', strtotime($user->dob))}}</td>
                                 <td>{{$user->created_at->format('Y/m/d')}}</td>
@@ -88,24 +88,40 @@
                 <label class="col-12 userProfile"></label>
             </div>
             <div class="row">
-                <label class="col-3">Name</label>
-                <label class="col-9 userName"></label>
+                <label class="col-4">Name</label>
+                <label class="col-8 userName"></label>
             </div>
             <div class="row">
-                <label class="col-3">Email</label>
-                <label class="col-9 userEmail"></label>
+                <label class="col-4">Email</label>
+                <label class="col-8 userEmail"></label>
             </div>
             <div class="row">
-                <label class="col-3">Phone</label>
-                <label class="col-9 userPhone"></label>
+                <label class="col-4">Phone</label>
+                <label class="col-8 userPhone"></label>
             </div>
             <div class="row">
-                <label class="col-3">Address</label>
-                <label class="col-9 userAddress"></label>
+                <label class="col-4">Date of Birth</label>
+                <label class="col-8 userDob"></label>
             </div>
             <div class="row">
-                <label class="col-3">Date of Birth</label>
-                <label class="col-9 userDob"></label>
+                <label class="col-4">Address</label>
+                <label class="col-8 userAddress"></label>
+            </div>
+            <div class="row">
+                <label class="col-4">Created AT</label>
+                <label class="col-8 userCreated"></label>
+            </div>
+            <div class="row">
+                <label class="col-4">Created User</label>
+                <label class="col-8 userCreateduser"></label>
+            </div>
+            <div class="row">
+                <label class="col-4">Last Updated AT</label>
+                <label class="col-8 userUpdated"></label>
+            </div>
+            <div class="row">
+                <label class="col-4">Updated User</label>
+                <label class="col-8 userUpdateduser"></label>
             </div>
         </div>
         <div class="modal-footer">

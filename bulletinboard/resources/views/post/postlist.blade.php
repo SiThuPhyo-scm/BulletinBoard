@@ -60,7 +60,7 @@
                             <tr>
                                 <td><button class="btn btn-link" data-target="#show" data-toggle="modal" id="show_post" data-show-id="{{$post->id}}">{{$post->title}}</button></td>
                                 <td class="text-justify">{{$post->description}}</td>
-                                <td>{{$post->user->name}}</td>
+                                <td>{{$post->createuser->name}}</td>
                                 <td>{{$post->created_at->format('Y/m/d')}}</td>
                                 <td><a href="/post/edit/{{$post->id}}" class="btn btn-primary">Edit</a></td>
                                 <td><a href="#deleteConfirmModal" class="btn btn-danger postDelete" onclick="deletePost({{$post->id}})" data-toggle="modal">Delete</a></td>
@@ -88,16 +88,32 @@
             </div>
             <div class="card-body modal-body">
                 <div class="row">
-                    <label class="col-3">Title</label>
-                    <label class="col-9 postTitle"></label>
+                    <label class="col-4">Title</label>
+                    <label class="col-8 postTitle"></label>
                 </div>
                 <div class="row">
-                    <label class="col-3">Description</label>
-                    <label class="col-9 postDesc text-justify"></label>
+                    <label class="col-4">Description</label>
+                    <label class="col-8 postDesc text-justify"></label>
                 </div>
                 <div class="row">
-                    <label class="col-3">Status</label>
-                    <label class="col-9 postStatus"></label>
+                    <label class="col-4">Status</label>
+                    <label class="col-8 postStatus"></label>
+                </div>
+                <div class="row">
+                    <label class="col-4">Created At</label>
+                    <label class="col-8 postCreate"></label>
+                </div>
+                <div class="row">
+                    <label class="col-4">Creadted User</label>
+                    <label class="col-8 postCreateuser"></label>
+                </div>
+                <div class="row">
+                    <label class="col-4">Last Updated At</label>
+                    <label class="col-8 postUpdate"></label>
+                </div>
+                <div class="row">
+                    <label class="col-4">Updated User</label>
+                    <label class="col-8 postUpdateuser"></label>
                 </div>
             </div>
             <div class="modal-footer">

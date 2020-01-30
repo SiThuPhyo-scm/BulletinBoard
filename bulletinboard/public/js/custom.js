@@ -18,12 +18,16 @@ $(document).on('click', '#show_user', function () {
     var id = $(this).data('showid');
     $.post('user/showUser', { '_token': $('input[name=_token]').val(), id: id }, function (data) {
         $('.modal-name').text('User Detail');
-        $('.userProfile').append("<img src='"+data.profile+"' class='profile profile-img'>");
+        $('.userProfile').append("<img src='"+data.profile+"' class='profile rounded-circle'>");
         $('.userName').text(data.name);
         $('.userEmail').text(data.email);
         $('.userPhone').text(data.phone);
         $('.userAddress').text(data.address);
         $('.userDob').text(data.dob);
+        $('.userCreated').text(data.created_at);
+        $('.userCreateduser').text(data.create_user_id);
+        $('.userUpdated').text(data.updated_at);
+        $('.userUpdateduser').text(data.updated_user_id);
     });
     $("button").click(function(){
         location.reload(true);
@@ -48,6 +52,10 @@ $(document).on('click', '#show_post', function () {
         $('.postTitle').text(data.title);
         $('.postDesc').text(data.description);
         $('.postStatus').text(data.status);
+        $('.postCreate').text(data.created_at);
+        $('.postCreateuser').text(data.create_user_id);
+        $('.postUpdate').text(data.updated_at);
+        $('.postUpdateuser').text(data.updated_user_id);
     });
 });
 // End Show Post

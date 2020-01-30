@@ -45,12 +45,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        session()->forget([
-            'search',
-            'title',
-            'desc'
-        ]);
-        $posts = $this->postService->getPost($auth_id = Auth::user()->id, $type = Auth::user()->type, $searchkeyword=session('searchkeyword'));
+        $posts = $this->postService->getPost();
         return view('post.postList', compact('posts'));
     }
 
@@ -62,11 +57,7 @@ class PostController extends Controller
      */
     public function search(Request $request)
     {
-        session([
-            'searchkeyword' => $request->search
-        ]);
-        $searchkeyword = $request->search;
-        $posts = $this->postService->getPost($auth_id = Auth::user()->id, $type = Auth::user()->type, $searchkeyword = $request->search);
+        $posts = $this->postService->search($request);
         return view('post.postlist', compact('posts'));
     }
 
@@ -103,14 +94,8 @@ class PostController extends Controller
      */
     public function createConfirm(PostRequest $request)
     {
-        $post    =  new Post;
-        $post->title = $request->title;
-        $post->desc  = $request->desc;
         $validator = $request->validated();
-        session([
-            'title' => $request->title,
-            'desc'  => $request->desc
-        ]);
+        $post = $this->postService->createConfirm($request);
         return view('post.createConfirm', compact('post'));
     }
 
@@ -122,10 +107,7 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $post    =  new Post;
-        $post->title = $request->title;
-        $post->desc  = $request->desc;
-        $posts   =  $this->postService->store($auth_id =  Auth::user()->id, $post);
+        $posts   =  $this->postService->store($request);
         return redirect()->intended('post')
             ->withSuccess('Post create successfully.');
     }
@@ -138,9 +120,6 @@ class PostController extends Controller
      */
     public function edit($post_id)
     {
-        session()->forget([
-            'searchkeyword'
-        ]);
         $post_detail = $this->postService->edit($post_id);
         return view('post.edit', compact('post_detail'));
     }
@@ -154,18 +133,8 @@ class PostController extends Controller
      */
     public function editConfirm(PostRequest $request, $post_id)
     {
-        $post = new Post;
-        $post->title = $request->title;
-        $post->desc = $request->desc;
-        $post->status = $request->status;
         $validator = $request->validated($post_id);
-        if (is_null($post->status)) {
-            $post->status = '0';
-        }
-        session([
-            'title' => $request->title,
-            'desc'  => $request->desc
-        ]);
+        $post = $this->postService->editConfirm($request);
         return view('post.editConfirm', compact('post','post_id'));
     }
 
@@ -178,12 +147,7 @@ class PostController extends Controller
      */
     public function update(Request $request, $post_id)
     {
-        $post     =  new Post;
-        $post->id     =  $post_id;
-        $post->title  =  $request->title;
-        $post->desc   =  $request->desc;
-        $post->status   =  $request->status;
-        $posts    =  $this->postService->update($user_id = Auth::user()->id, $post);
+        $posts    =  $this->postService->update($request, $post_id);
         return redirect()->intended('post')
             ->withSuccess('Post update successfully.');
     }
@@ -196,9 +160,6 @@ class PostController extends Controller
      */
     public function destory(Request $request)
     {
-        session()->forget([
-            'searchkeyword'
-        ]);
         $posts = $this->postService->softDelete($auth_id = Auth::user()->id, $post_id = $request->post_id);
         return redirect()->intended('post')
             ->withSuccess('Post delete successfully.');

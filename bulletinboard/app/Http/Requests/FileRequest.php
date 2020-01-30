@@ -24,7 +24,7 @@ class FileRequest extends FormRequest
     public function rules()
     {
         return [
-            'file' => 'required|file|mimes:csv,txt|max:2048',
+            'file' => 'required|file|mimes:csv,txt|max:2048'
         ];
     }
 }

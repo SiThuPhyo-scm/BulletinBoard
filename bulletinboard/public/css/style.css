@@ -46,15 +46,12 @@ table tr td {
 .pagination a:hover {
     background-color: #09d6f3;
 }
-.profile-img {
+.profile {
     width: 150px;
     height: 150px;
     background: url("http://placehold.it/180") no-repeat center;
     background-size: cover;
-}
-.profile {
     border: solid 1px #000;
-    border-radius: 100px;
 }
 .table-scroll {
     overflow-x: auto;
