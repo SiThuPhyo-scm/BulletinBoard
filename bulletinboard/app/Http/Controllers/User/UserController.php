@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Requests\PasswordRequest;
-use Illuminate\Support\Facades\Hash;
 use Validator;
 
 /**
@@ -44,16 +43,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        session()->forget([
-            'searchkeyword',
-            'name',
-            'email',
-            'type',
-            'phone',
-            'dob',
-            'address',
-        ]);
-        $users = $this->userService->search($search=session('search'));
+        $users = $this->userService->getuser();
         return view('user.userList', compact('users'));
     }
 
@@ -65,15 +55,7 @@ class UserController extends Controller
      */
     public function search(Request $request)
     {
-        $search = new User;
-        $search->name = $request->name;
-        $search->email = $request->email;
-        $search->startdate = $request->startdate;
-        $search->enddate = $request->enddate;
-        session([
-            'search' => $search,
-        ]);
-        $users = $this->userService->search($search);
+        $users = $this->userService->search($request);
         return view('user.userlist', compact('users'));
     }
 
@@ -111,27 +93,7 @@ class UserController extends Controller
     public function createConfirm(UserRequest $request)
     {
         $validator = $request->validated();
-        $pwd = $request->password;
-        $profile_img = $request->file('profileImg');
-        $users = $this->userService->createConfirm($pwd, $profile_img);
-        $user = new User;
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->pwd = $request->password;
-        $user->type = $request->type;
-        $user->phone = $request->phone;
-        $user->dob = $request->dob;
-        $user->address = $request->address;
-        $user->pwd_hide = $users->pwd_hide;
-        $user->filename = $users->filename;
-        session([
-            'name' => $request->name,
-            'email' => $request->email,
-            'type' => $request->type,
-            'phone' => $request->phone,
-            'dob' => $request->dob,
-            'address' => $request->address,
-        ]);
+        $user = $this->userService->createConfirm($request);
         return view('user.createConfirm', compact('user'));
     }
 
@@ -143,16 +105,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $user = new User;
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-        $user->type = $request->type;
-        $user->phone = $request->phone;
-        $user->dob = $request->dob;
-        $user->address = $request->address;
-        $user->profile = $request->filename;
-        $insert_user = $this->userService->store($auth_id = Auth::user()->id, $user);
+        $insert_user = $this->userService->store($request);
         return redirect()->intended('user')->with('success', 'User create successfully.');
     }
 
@@ -163,9 +116,6 @@ class UserController extends Controller
      */
     public function profile()
     {
-        session()->forget([
-            'search'
-        ]);
         $user_profile = $this->userService->profile($user_id = Auth::user()->id);
         return view('user.profile', compact('user_profile'));
     }
@@ -191,16 +141,7 @@ class UserController extends Controller
     public function editConfirm(UpdateUserRequest $request, $user_id)
     {
         $validator = $request->validated();
-        $new_profile = $request->file('profileImg');
-        $filename = $this->userService->editConfirm($new_profile);
-        $user = new User;
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->type = $request->type;
-        $user->phone = $request->phone;
-        $user->dob = $request->dob;
-        $user->address = $request->address;
-        $user->filename= $filename;
+        $user = $this->userService->editConfirm($request);
         return view('user.editConfirm', compact('user', 'user_id'));
     }
 
@@ -213,17 +154,8 @@ class UserController extends Controller
      */
     public function update(Request $request, $user_id)
     {
-        $user = new User;
-        $profile = $request->filename;
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->type = $request->type;
-        $user->phone = $request->phone;
-        $user->dob = $request->dob;
-        $user->address = $request->address;
-        $user->profile = $request->filename;
-        $users = $this->userService->update($auth_id = Auth::user()->id, $user);
-        return redirect()->intended('user')
+        $users = $this->userService->update($request);
+        return redirect()->intended('post')
             ->withSuccess('Profile update successfully.');
     }
 
@@ -235,12 +167,7 @@ class UserController extends Controller
      */
     public function destory(Request $request)
     {
-        session()->forget([
-            'search'
-        ]);
-        $user_id = $request->user_id;
-        $auth_id = Auth::user()->id;
-        $user = $this->userService->softDelete($user_id, $auth_id);
+        $user = $this->userService->softDelete($request);
         return redirect()->intended('user')
             ->withSuccess('User delete successfully.');
     }
@@ -266,10 +193,7 @@ class UserController extends Controller
     public function changepassword(PasswordRequest $request, $user_id)
     {
         $validator = $request->validated();
-        $oldpwd = $request->oldpassword;
-        $newpwd = $request->newpassword;
-        $auth_id = Auth::user()->id;
-        $status = $this->userService->changepassword($oldpwd, $newpwd, $auth_id);
+        $status = $this->userService->changepassword($request, $user_id);
         if ($status) {
             return redirect()->intended('post')->withSuccess('Password change successfully.');
         } else {

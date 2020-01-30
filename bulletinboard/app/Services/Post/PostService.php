@@ -4,6 +4,9 @@ namespace App\Services\Post;
 
 use App\Contracts\Dao\Post\PostDaoInterface;
 use App\Contracts\Services\Post\PostServiceInterface;
+use App\Models\Post;
+use App\Models\User;
+use Auth;
 
 class PostService implements PostServiceInterface
 {
@@ -30,9 +33,30 @@ class PostService implements PostServiceInterface
      * @param $type
      * @return void
      */
-    public function getPost($auth_id, $type, $searchkeyword)
+    public function getPost()
     {
+        session()->forget([
+            'search',
+            'title',
+            'desc'
+        ]);
+        $auth_id = Auth::user()->id;
+        $type = Auth::user()->type;
+        $searchkeyword=session('searchkeyword');
         return $this->postDao->getPost($auth_id, $type, $searchkeyword);
+    }
+
+    /**
+     * Search Post List
+     *
+     * @param $request
+     */
+    public function search($request)
+    {
+        session([
+            'searchkeyword' => $request->search
+        ]);
+        return $this->postDao->getPost($auth_id = Auth::user()->id, $type = Auth::user()->type, $searchkeyword = $request->search);
     }
 
     /**
@@ -43,7 +67,9 @@ class PostService implements PostServiceInterface
      */
     public function show($post_id)
     {
-        $post= $this->postDao->show($post_id);
+        $post = $this->postDao->show($post_id);
+        $post->create_user_id = $post->createuser->name;
+        $post->updated_user_id = $post->updateuser->name;
         if($post->status == 1) {
             $post->status = 'Active';
         }
@@ -52,17 +78,37 @@ class PostService implements PostServiceInterface
         }
         return $post;
     }
-    
+
+    /**
+     * Show post crete confirmation page
+     *
+     * @param $request
+     * @return $post
+     */
+    public function createConfirm($request)
+    {
+        session([
+            'title' => $request->title,
+            'desc'  => $request->desc
+        ]);
+        $post    =  new Post;
+        $post->title = $request->title;
+        $post->desc  = $request->desc;
+        return $post;
+    }
+
     /**
      * Store Post Details into the database
      *
-     * @param $auth_id
-     * @param $post
+     * @param $request
      * @return void
      */
-    public function store($auth_id, $post)
+    public function store($request)
     {
-        return $this->postDao->store($auth_id, $post);
+        $post    =  new Post;
+        $post->title = $request->title;
+        $post->desc  = $request->desc;
+        return $this->postDao->store($auth_id = Auth::user()->id, $post);
     }
 
     /**
@@ -73,19 +119,46 @@ class PostService implements PostServiceInterface
      */
     public function edit($post_id)
     {
+        session()->forget([
+            'searchkeyword'
+        ]);
         return $this->postDao->edit($post_id);
+    }
+
+    /**
+     *
+     */
+    public function editConfirm($request)
+    {
+        session([
+            'title' => $request->title,
+            'desc'  => $request->desc
+        ]);
+        $post = new Post;
+        $post->title = $request->title;
+        $post->desc = $request->desc;
+        $post->status = $request->status;
+        if (is_null($post->status)) {
+            $post->status = '0';
+        }
+        return $post;
     }
 
     /**
      * Update Post
      *
-     * @param $user_id
-     * @param $post
+     * @param $request
+     * @param $post_id
      * @return void
      */
-    public function update($user_id, $post)
+    public function update($request, $post_id)
     {
-        return $this->postDao->update($user_id, $post);
+        $post     =  new Post;
+        $post->id     =  $post_id;
+        $post->title  =  $request->title;
+        $post->desc   =  $request->desc;
+        $post->status   =  $request->status;
+        return $this->postDao->update($user_id = Auth::user()->id, $post);
     }
 
     /**
@@ -97,6 +170,9 @@ class PostService implements PostServiceInterface
      */
     public function softDelete($auth_id, $post_id)
     {
+        session()->forget([
+            'searchkeyword'
+        ]);
         return $this->postDao->softDelete($auth_id, $post_id);
     }
 

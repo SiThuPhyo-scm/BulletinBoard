@@ -24,8 +24,13 @@ class User extends Model
         'remember_token',
     ];
 
-    public function parent()
+    public function createuser()
     {
-        return $this->hasMany(User::class, 'id');
+        return $this->belongsTo(User::class, 'create_user_id');
+    }
+
+    public function updateuser()
+    {
+        return $this->belongsTo(User::class, 'updated_user_id');
     }
 }
