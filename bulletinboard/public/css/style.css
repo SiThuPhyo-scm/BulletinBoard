@@ -49,9 +49,6 @@ table tr td {
 .profile {
     width: 150px;
     height: 150px;
-    background: url("http://placehold.it/180") no-repeat center;
-    background-size: cover;
-    border: solid 1px #000;
 }
 .table-scroll {
     overflow-x: auto;

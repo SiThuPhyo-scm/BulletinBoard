@@ -22,7 +22,7 @@ class PostDao implements PostDaoInterface
             } else {
                 $posts = Post::where('title', 'LIKE', '%' . $searchkeyword . '%')
                     ->orwhere('description', 'LIKE', '%' . $searchkeyword . '%')
-                    ->orwhereHas('user', function ($query) use ($searchkeyword) {
+                    ->orwhereHas('createuser', function ($query) use ($searchkeyword) {
                         $query->where('name', 'LIKE', '%' . $searchkeyword . '%');
                     })
                     ->orderBy('updated_at', 'DESC')
@@ -43,7 +43,6 @@ class PostDao implements PostDaoInterface
         }
         return $posts;
     }
-
 
     /**
      * Show Post Details with modal

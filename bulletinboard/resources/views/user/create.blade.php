@@ -92,7 +92,7 @@
                             @error('profileImg')
                                 <label for="validation" class="text-danger">{{ $message }}</label>
                             @enderror
-                            <img src="http://placehold.it/180" id="stp" class="mt-3 profile-img" alt="profile">
+                            <img src="http://placehold.it/180" id="stp" class="mt-3 profile border border-info" alt="profile">
                         </div>
                         <label for="require" class="col-1 col-sm-1 col-md-1 col-form-label text-danger text-md-left">*</label>
                     </div>

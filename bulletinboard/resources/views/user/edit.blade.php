@@ -79,7 +79,7 @@
                                     @error('profileImg')
                                         <label for="validation" class="text-danger">{{ $message }}</label>
                                     @enderror
-                                    <img src="{{ $users->profile }}" id="stp" class="mt-3 profile" alt="profile">
+                                    <img src="{{ $users->profile }}" id="stp" class="mt-3 profile border border-info" alt="profile">
                                 </div>
                                 <label for="require" class="col-1 col-sm-1 col-md-1 col-form-label text-danger text-md-left">*</label>
                             </div>
@@ -96,7 +96,7 @@
                     </form>
                 </div>
                 <div class="col-md-4 col-sm-0">
-                    <img src="{{ $users->profile }}" class="profile rounded-circle" alt="profile">
+                    <img src="{{ $users->profile }}" class="profile border border-info rounded-circle" alt="profile">
                 </div>
             </div>
         </div>

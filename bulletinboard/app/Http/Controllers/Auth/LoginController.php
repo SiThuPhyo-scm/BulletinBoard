@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\LoginRequest;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -26,24 +27,17 @@ class LoginController extends Controller
 
     /**
      * User Login
-     *
      * Login action using user email and password
-     * @param [Request] email and password from user input
+     *
+     * @param LoginRequest $request
      * @return [view] Post List
      */
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
         $email = $request->email;
         $pwd = $request->password;
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
-            'password' => 'required|min:8|regex:/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/',
-        ]);
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput();
-        }
+        $validator = $request->validated();
+        
         if (Auth::guard('')->attempt(['email' => $email, 'password' => $pwd])) {
             return redirect()->intended('/post');
         } else {

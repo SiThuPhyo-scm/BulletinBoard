@@ -31,19 +31,19 @@ class UserService implements UserServiceInterface
      *
      * @return void
      */
-    public function getuser()
-    {
-        session()->forget([
-            'searchkeyword',
-            'name',
-            'email',
-            'type',
-            'phone',
-            'dob',
-            'address',
-        ]);
-        return $this->userDao->getuser($search=session('search'));
-    }
+    // public function getuser()
+    // {
+    //     session()->forget([
+    //         'searchkeyword',
+    //         'name',
+    //         'email',
+    //         'type',
+    //         'phone',
+    //         'dob',
+    //         'address',
+    //     ]);
+    //     return $this->userDao->getuser($search=session('search'));
+    // }
 
     /**
      * Search User
@@ -51,15 +51,12 @@ class UserService implements UserServiceInterface
      * @param $request
      * @return void
      */
-    public function search($request)
+    public function getuser($search)
     {
-        $search = new User;
-        $search->name = $request->name;
-        $search->email = $request->email;
-        $search->startdate = $request->startdate;
-        $search->enddate = $request->enddate;
-        session([
-            'search' => $search,
+        session()->forget([
+            'search',
+            'title',
+            'desc'
         ]);
         return $this->userDao->getuser($search);
     }
@@ -75,6 +72,9 @@ class UserService implements UserServiceInterface
         $users = $this->userDao->show($user_id);
         $users->create_user_id = $users->createuser->name;
         $users->updated_user_id = $users->updateuser->name;
+        $users->birthdate = date('Y/m/d', strtotime($users->dob));
+        $users->createdate = $users->created_at->format('Y/m/d');
+        $users->updatedate = $users->updated_at->format('Y/m/d');
         return $users;
     }
 
@@ -156,7 +156,15 @@ class UserService implements UserServiceInterface
     public function profile($auth_id)
     {
         session()->forget([
-            'search'
+            'search',
+            'title',
+            'desc',
+            'name',
+            'email',
+            'type',
+            'phone',
+            'dob',
+            'address'
         ]);
         return $this->userDao->profile($auth_id);
     }

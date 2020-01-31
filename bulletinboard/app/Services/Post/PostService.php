@@ -33,30 +33,17 @@ class PostService implements PostServiceInterface
      * @param $type
      * @return void
      */
-    public function getPost()
+    public function getPost($request)
     {
         session()->forget([
             'search',
             'title',
             'desc'
         ]);
+        $searchkeyword = $request->search;
         $auth_id = Auth::user()->id;
         $type = Auth::user()->type;
-        $searchkeyword=session('searchkeyword');
         return $this->postDao->getPost($auth_id, $type, $searchkeyword);
-    }
-
-    /**
-     * Search Post List
-     *
-     * @param $request
-     */
-    public function search($request)
-    {
-        session([
-            'searchkeyword' => $request->search
-        ]);
-        return $this->postDao->getPost($auth_id = Auth::user()->id, $type = Auth::user()->type, $searchkeyword = $request->search);
     }
 
     /**
@@ -70,6 +57,8 @@ class PostService implements PostServiceInterface
         $post = $this->postDao->show($post_id);
         $post->create_user_id = $post->createuser->name;
         $post->updated_user_id = $post->updateuser->name;
+        $post->createdate = $post->created_at->format('Y/m/d');
+        $post->updatedate = $post->updated_at->format('Y/m/d');
         if($post->status == 1) {
             $post->status = 'Active';
         }
@@ -179,13 +168,16 @@ class PostService implements PostServiceInterface
     /**
      * Import CSV file
      *
-     * @param $auth_id
-     * @param $filepath
+     * @param $request
      * @return void
      */
-    public function import($auth_id, $filepath)
+    public function import($request)
     {
-        return $this->postDao->import($auth_id, $filepath);
+        $file = $request->file('file');
+        $filename = $file->getClientOriginalName();
+        $file->move( 'csv/' . Auth::user()->id , $filename);
+        $filepath = public_path() . '/csv/' . '/'. Auth::user()->id .'/' .$filename;
+        return $this->postDao->import($auth_id = Auth::user()->id, $filepath);
     }
 
 }

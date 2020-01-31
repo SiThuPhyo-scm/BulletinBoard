@@ -28,7 +28,7 @@
                     <div class="form-group">
                         <div class="text-center">
                             <button type="submit" class="btn btn-primary mr-4">Create</button>
-                            <a href="/post/create" class="btn btn-dark">Cancel</a>
+                            <a href="{{ route('post.create') }}" class="btn btn-dark">Cancel</a>
                         </div>
                     </div>
                 </form>

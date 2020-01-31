@@ -5,14 +5,13 @@ namespace App\Http\Controllers\User;
 use App\Contracts\Services\User\UserServiceInterface;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Redirect;
+use App\Http\Requests\PasswordRequest;
+use App\Http\Requests\UpdateUserRequest;
+use App\Http\Requests\UserRequest;
 use App\Models\User;
 use App\Services\User\UserService;
-use Auth;
 use Illuminate\Http\Request;
-use App\Http\Requests\UserRequest;
-use App\Http\Requests\UpdateUserRequest;
-use App\Http\Requests\PasswordRequest;
-use Validator;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * SystemName: BulletinBoard
@@ -33,6 +32,7 @@ class UserController extends Controller
      */
     public function __construct(UserServiceInterface $userService)
     {
+        $this->middleware('auth');
         $this->userService = $userService;
     }
 
@@ -41,10 +41,15 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = $this->userService->getuser();
-        return view('user.userList', compact('users'));
+        $search = new User;
+        $search->name = $request->name;
+        $search->email = $request->email;
+        $search->startdate = $request->startdate;
+        $search->enddate = $request->enddate;
+        $users = $this->userService->getuser($search);
+        return view('user.userList', compact('users','search'));
     }
 
     /**
@@ -55,8 +60,13 @@ class UserController extends Controller
      */
     public function search(Request $request)
     {
-        $users = $this->userService->search($request);
-        return view('user.userlist', compact('users'));
+        $search = new User;
+        $search->name = $request->name;
+        $search->email = $request->email;
+        $search->startdate = $request->startdate;
+        $search->enddate = $request->enddate;
+        $users = $this->userService->getuser($search);
+        return view('user.userlist', compact('users','search'));
     }
 
     /**
@@ -67,7 +77,7 @@ class UserController extends Controller
      */
     public function show(Request $request)
     {
-        $user = $this->userService->show($user_id=$request->id);
+        $user = $this->userService->show($user_id = $request->id);
         return response()->json($user);
     }
 
@@ -79,7 +89,7 @@ class UserController extends Controller
     public function create()
     {
         session()->forget([
-            'search'
+            'search',
         ]);
         return view('user.create');
     }
@@ -155,7 +165,7 @@ class UserController extends Controller
     public function update(Request $request, $user_id)
     {
         $users = $this->userService->update($request);
-        return redirect()->intended('post')
+        return redirect()->intended('user/profile')
             ->withSuccess('Profile update successfully.');
     }
 
@@ -197,7 +207,7 @@ class UserController extends Controller
         if ($status) {
             return redirect()->intended('post')->withSuccess('Password change successfully.');
         } else {
-            return redirect()->back()->with('Incorrect','Old password does not match.');
+            return redirect()->back()->with('Incorrect', 'The old password you have entered is incorrect. Please try again');
         }
     }
 }
