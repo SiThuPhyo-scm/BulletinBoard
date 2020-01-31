@@ -4,8 +4,7 @@ namespace App\Contracts\Services\User;
 
 interface UserServiceInterface
 {
-    public function getuser();
-    public function search($request);
+    public function getuser($request);
     public function show($user_id);
     public function createConfirm($request);
     public function store($request);

@@ -62,7 +62,7 @@
                         </div>
                         <div class="col-5 col-sm-4 col-md-4">
                             <input type="hidden" id="profile" name="filename" value="{{ $user->filename }}" class="form-control" onchange="readURL(this);">
-                            <img src="/img/tempProfile/{{$user->filename}}" class="profile-img profile" alt="profile">
+                            <img src="/img/tempProfile/{{$user->filename}}" class="profile rounded-circle" alt="profile">
                         </div>
                     </div>
                 </form>

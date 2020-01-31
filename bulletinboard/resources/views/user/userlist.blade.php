@@ -13,16 +13,16 @@
                 @csrf
                 <div class="row">
                     <div class="col-sm-6 col-md-3 col-lg-3">
-                        <input type="text" name="name" class="form-control form-control-md mb-4" placeholder="Name">
+                        <input type="text" name="name" class="form-control form-control-md mb-4" value="{{ $search->name }}" placeholder="Name">
                     </div>
                     <div class="col-sm-6 col-md-3 col-lg-3">
-                        <input type="text" name="email" class="form-control form-control-md mb-4" placeholder="Email">
+                        <input type="text" name="email" class="form-control form-control-md mb-4" value="{{ $search->email }}" placeholder="Email">
                     </div>
                     <div class="col-sm-6 col-md-3 col-lg-2">
-                        <input type="text" name="startdate" onfocus="(this.type='date')" onblur="if(this.value==''){this.type='text'}" class="form-control mb-4" placeholder="Created From">
+                        <input type="text" name="startdate" value="{{ $search->startdate }}" onfocus="(this.type='date')" onblur="if(this.value==''){this.type='text'}" class="form-control mb-4" placeholder="Created From">
                     </div>
                     <div class="col-sm-6 col-md-3 col-lg-2">
-                        <input type="text" name="enddate" onfocus="(this.type='date')" onblur="if(this.value==''){this.type='text'}" class="form-control mb-4" placeholder="Created To">
+                        <input type="text" name="enddate" value="{{ $search->enddate }}" onfocus="(this.type='date')" onblur="if(this.value==''){this.type='text'}" class="form-control mb-4" placeholder="Created To">
                     </div>
                     <div class="col-lg-2">
                         <div class="form-group text-center">
@@ -69,7 +69,7 @@
             <div class="row">
                 <!-- pagination -->
                 <ul class="pagination col-md-12 justify-content-center mt-2">
-                    {{$users->links()}}
+                    {{$users->fragment($search)->links()}}
                 </ul>
             </div>
         </div>

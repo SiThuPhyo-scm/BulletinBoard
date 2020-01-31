@@ -30,11 +30,13 @@ class PostController extends Controller
 
     /**
      * Create a new Controller instance.
+     * Only authenticated users may enter
      *
      * @param PostServiceInterface $postService
      */
     public function __construct(PostServiceInterface $postService)
     {
+        $this->middleware('auth');
         $this->postService = $postService;
     }
 
@@ -43,10 +45,11 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $posts = $this->postService->getPost();
-        return view('post.postList', compact('posts'));
+        $search = $request->search;
+        $posts = $this->postService->getPost($request);
+        return view('post.postList', compact('posts', 'search'));
     }
 
     /**
@@ -57,8 +60,9 @@ class PostController extends Controller
      */
     public function search(Request $request)
     {
-        $posts = $this->postService->search($request);
-        return view('post.postlist', compact('posts'));
+        $search = $request->search;
+        $posts = $this->postService->getPost($request);
+        return view('post.postlist', compact('posts', 'search'));
     }
 
     /**
@@ -80,9 +84,6 @@ class PostController extends Controller
      */
     public function create()
     {
-        session()->forget([
-            'searchkeyword'
-        ]);
         return view('post.create');
     }
 
@@ -107,7 +108,7 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        $posts   =  $this->postService->store($request);
+        $posts = $this->postService->store($request);
         return redirect()->intended('post')
             ->withSuccess('Post create successfully.');
     }
@@ -196,13 +197,8 @@ class PostController extends Controller
      */
     public function import(FileRequest $request)
     {
-        $auth_id = Auth::user()->id;
         $validator = $request->validated();
-        $file = $request->file('file');
-        $filename = $file->getClientOriginalName();
-        $file->move( 'csv/' . $auth_id , $filename);
-        $filepath = public_path() . '/csv/' . '/'.$auth_id .'/' .$filename;
-        $message = $this->postService->import($auth_id, $filepath);
+        $message = $this->postService->import($request);
         if($message == 1){
             return redirect()
                 ->intended('post')
