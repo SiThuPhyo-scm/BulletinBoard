@@ -49,6 +49,7 @@ Route::prefix('user')->group(function() {
     Route::get('/password/{id}', array('as'=>'user.password', 'uses'=>'User\UserController@password'));
 
     Route::post('/passwordchange/{id}', array('as'=>'user.passwordchange', 'uses'=>'User\UserController@changepassword'));
+
 });
 //Post
 Route::prefix('post')->group(function() {
@@ -78,4 +79,3 @@ Route::prefix('post')->group(function() {
 
     Route::get('/download', array('as'=>'export', 'uses'=>'Post\PostController@export'));
 });
-

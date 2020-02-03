@@ -37,7 +37,7 @@ class LoginController extends Controller
         $email = $request->email;
         $pwd = $request->password;
         $validator = $request->validated();
-        
+
         if (Auth::guard('')->attempt(['email' => $email, 'password' => $pwd])) {
             return redirect()->intended('/post');
         } else {

@@ -89,7 +89,8 @@ class UserController extends Controller
     public function create()
     {
         session()->forget([
-            'search',
+            'title',
+            'desc',
         ]);
         return view('user.create');
     }

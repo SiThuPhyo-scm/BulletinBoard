@@ -80,11 +80,3 @@ $(window).on('load resize', function () {
     }
 });
 // End footer
-
-// Prevent BACK button click after SignOut
-window.history.forward();
-   function noBack() {
-      window.history.forward();
-   }
-
-//
