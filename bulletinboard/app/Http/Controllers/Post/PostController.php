@@ -173,6 +173,17 @@ class PostController extends Controller
      */
     public function export()
     {
+        session()->forget([
+            'search',
+            'title',
+            'desc',
+            'name',
+            'email',
+            'type',
+            'phone',
+            'dob',
+            'address'
+        ]);
         return Excel::download(new PostsExport, 'posts.csv');
     }
 
@@ -184,7 +195,15 @@ class PostController extends Controller
     public function upload()
     {
         session()->forget([
-            'searchkeyword'
+            'search',
+            'title',
+            'desc',
+            'name',
+            'email',
+            'type',
+            'phone',
+            'dob',
+            'address'
         ]);
         return view('post.upload');
     }

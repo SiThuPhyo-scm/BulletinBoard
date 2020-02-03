@@ -38,7 +38,13 @@ class PostService implements PostServiceInterface
         session()->forget([
             'search',
             'title',
-            'desc'
+            'desc',
+            'name',
+            'email',
+            'type',
+            'phone',
+            'dob',
+            'address'
         ]);
         $searchkeyword = $request->search;
         $auth_id = Auth::user()->id;
@@ -54,6 +60,17 @@ class PostService implements PostServiceInterface
      */
     public function show($post_id)
     {
+        session()->forget([
+            'search',
+            'title',
+            'desc',
+            'name',
+            'email',
+            'type',
+            'phone',
+            'dob',
+            'address'
+        ]);
         $post = $this->postDao->show($post_id);
         $post->create_user_id = $post->createuser->name;
         $post->updated_user_id = $post->updateuser->name;
@@ -94,6 +111,17 @@ class PostService implements PostServiceInterface
      */
     public function store($request)
     {
+        session()->forget([
+            'search',
+            'title',
+            'desc',
+            'name',
+            'email',
+            'type',
+            'phone',
+            'dob',
+            'address'
+        ]);
         $post    =  new Post;
         $post->title = $request->title;
         $post->desc  = $request->desc;
@@ -109,7 +137,14 @@ class PostService implements PostServiceInterface
     public function edit($post_id)
     {
         session()->forget([
-            'searchkeyword'
+            'title',
+            'desc',
+            'name',
+            'email',
+            'type',
+            'phone',
+            'dob',
+            'address'
         ]);
         return $this->postDao->edit($post_id);
     }
@@ -142,6 +177,17 @@ class PostService implements PostServiceInterface
      */
     public function update($request, $post_id)
     {
+        session()->forget([
+            'search',
+            'title',
+            'desc',
+            'name',
+            'email',
+            'type',
+            'phone',
+            'dob',
+            'address'
+        ]);
         $post     =  new Post;
         $post->id     =  $post_id;
         $post->title  =  $request->title;
@@ -160,7 +206,15 @@ class PostService implements PostServiceInterface
     public function softDelete($auth_id, $post_id)
     {
         session()->forget([
-            'searchkeyword'
+            'search',
+            'title',
+            'desc',
+            'name',
+            'email',
+            'type',
+            'phone',
+            'dob',
+            'address'
         ]);
         return $this->postDao->softDelete($auth_id, $post_id);
     }

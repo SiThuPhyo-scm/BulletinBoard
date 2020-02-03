@@ -69,7 +69,7 @@
             <div class="row">
                 <!-- pagination -->
                 <ul class="pagination col-md-12 justify-content-center mt-2">
-                    {{$users->fragment($search)->links()}}
+                    {{$users->links()}}
                 </ul>
             </div>
         </div>

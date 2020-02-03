@@ -16,24 +16,24 @@ class UserDao implements UserDaoInterface
     public function getuser($search)
     {
         if ($search == null) {
-            $users = User::orderBy('users.updated_at', 'DESC')->paginate(10);
+            $users = User::orderBy('users.updated_at', 'DESC')->paginate(5);
         } elseif ($search->name == null && $search->email == null && ($search->startdate == null || $search->enddate == null)) {
-            $users = User::orderBy('users.updated_at', 'DESC')->paginate(10);
+            $users = User::orderBy('users.updated_at', 'DESC')->paginate(5);
         } else {
             if ((isset($search->name) && isset($search->email)) && (is_null($search->startdate) || is_null($search->enddate))) {
                 $users = User::where('users.name', 'LIKE', '%' . $search->name . '%')
                     ->orWhere('users.email', 'LIKE', '%' . $search->email . '%')
                     ->orderBy('users.updated_at', 'DESC')
-                    ->paginate(10);
+                    ->paginate(5);
             } else if ((isset($search->name) || isset($search->email)) && (is_null($search->startdate) || is_null($search->enddate))) {
                 $users = User::where('users.name', 'LIKE', '%' . $search->name . '%')
                     ->where('users.email', 'LIKE', '%' . $search->email . '%')
                     ->orderBy('users.updated_at', 'DESC')
-                    ->paginate(10);
+                    ->paginate(5);
             } else if (isset($search->startdate) && isset($search->enddate)) {
                 $users = User::whereBetween('users.created_at', array($search->startdate, $search->enddate))
                     ->orderBy('users.updated_at', 'DESC')
-                    ->paginate(10);
+                    ->paginate(5);
             }
         }
         return $users;

@@ -28,24 +28,6 @@ class UserService implements UserServiceInterface
 
     /**
      * Get User Detail
-     *
-     * @return void
-     */
-    // public function getuser()
-    // {
-    //     session()->forget([
-    //         'searchkeyword',
-    //         'name',
-    //         'email',
-    //         'type',
-    //         'phone',
-    //         'dob',
-    //         'address',
-    //     ]);
-    //     return $this->userDao->getuser($search=session('search'));
-    // }
-
-    /**
      * Search User
      *
      * @param $request
@@ -54,9 +36,14 @@ class UserService implements UserServiceInterface
     public function getuser($search)
     {
         session()->forget([
-            'search',
             'title',
-            'desc'
+            'desc',
+            'name',
+            'email',
+            'type',
+            'phone',
+            'dob',
+            'address'
         ]);
         return $this->userDao->getuser($search);
     }
@@ -156,7 +143,6 @@ class UserService implements UserServiceInterface
     public function profile($auth_id)
     {
         session()->forget([
-            'search',
             'title',
             'desc',
             'name',
@@ -177,6 +163,16 @@ class UserService implements UserServiceInterface
      */
     public function edit($auth_id)
     {
+        session()->forget([
+            'title',
+            'desc',
+            'name',
+            'email',
+            'type',
+            'phone',
+            'dob',
+            'address'
+        ]);
         return $this->userDao->edit($auth_id);
     }
 
@@ -188,6 +184,16 @@ class UserService implements UserServiceInterface
      */
     public function editConfirm($request)
     {
+        session()->forget([
+            'title',
+            'desc',
+            'name',
+            'email',
+            'type',
+            'phone',
+            'dob',
+            'address'
+        ]);
         $new_profile = $request->file('profileImg');
         if ($filename = $new_profile) {
             $filename = $new_profile->getClientOriginalName();
@@ -244,7 +250,14 @@ class UserService implements UserServiceInterface
     public function softDelete($request)
     {
         session()->forget([
-            'search'
+            'title',
+            'desc',
+            'name',
+            'email',
+            'type',
+            'phone',
+            'dob',
+            'address'
         ]);
         $user_id = $request->user_id;
         return $this->userDao->softDelete($user_id, $auth_id = Auth::user()->id);
@@ -259,6 +272,16 @@ class UserService implements UserServiceInterface
      */
     public function changepassword($request, $user_id)
     {
+        session()->forget([
+            'title',
+            'desc',
+            'name',
+            'email',
+            'type',
+            'phone',
+            'dob',
+            'address'
+        ]);
         $oldpwd = $request->oldpassword;
         $newpwd = $request->newpassword;
         return $this->userDao->changepassword($oldpwd, $newpwd, $user_id);
