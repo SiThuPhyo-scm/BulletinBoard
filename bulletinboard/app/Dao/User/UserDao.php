@@ -19,22 +19,20 @@ class UserDao implements UserDaoInterface
             $users = User::orderBy('users.updated_at', 'DESC')->paginate(5);
         } elseif ($search->name == null && $search->email == null && ($search->startdate == null || $search->enddate == null)) {
             $users = User::orderBy('users.updated_at', 'DESC')->paginate(5);
-        } else {
-            if ((isset($search->name) && isset($search->email)) && (is_null($search->startdate) || is_null($search->enddate))) {
-                $users = User::where('users.name', 'LIKE', '%' . $search->name . '%')
-                    ->orWhere('users.email', 'LIKE', '%' . $search->email . '%')
-                    ->orderBy('users.updated_at', 'DESC')
-                    ->paginate(5);
-            } else if ((isset($search->name) || isset($search->email)) && (is_null($search->startdate) || is_null($search->enddate))) {
-                $users = User::where('users.name', 'LIKE', '%' . $search->name . '%')
-                    ->where('users.email', 'LIKE', '%' . $search->email . '%')
-                    ->orderBy('users.updated_at', 'DESC')
-                    ->paginate(5);
-            } else if (isset($search->startdate) && isset($search->enddate)) {
-                $users = User::whereBetween('users.created_at', array($search->startdate, $search->enddate))
-                    ->orderBy('users.updated_at', 'DESC')
-                    ->paginate(5);
-            }
+        } elseif ((isset($search->name) && isset($search->email)) && (is_null($search->startdate) || is_null($search->enddate))) {
+            $users = User::where('users.name', 'LIKE', '%' . $search->name . '%')
+                ->orWhere('users.email', 'LIKE', '%' . $search->email . '%')
+                ->orderBy('users.updated_at', 'DESC')
+                ->paginate(5);
+        } else if ((isset($search->name) || isset($search->email)) && (is_null($search->startdate) || is_null($search->enddate))) {
+            $users = User::where('users.name', 'LIKE', '%' . $search->name . '%')
+                ->where('users.email', 'LIKE', '%' . $search->email . '%')
+                ->orderBy('users.updated_at', 'DESC')
+                ->paginate(5);
+        } else if (isset($search->startdate) && isset($search->enddate)) {
+            $users = User::whereBetween('users.created_at', array($search->startdate, $search->enddate))
+                ->orderBy('users.updated_at', 'DESC')
+                ->paginate(5);
         }
         return $users;
     }
@@ -60,16 +58,16 @@ class UserDao implements UserDaoInterface
     public function store($auth_id, $users)
     {
         $insert_user = new User([
-        'name'            =>  $users->name,
-        'email'           =>  $users->email,
-        'password'        =>  $users->password,
-        'profile'         =>  $users->profile,
-        'type'            =>  $users->type,
-        'phone'           =>  $users->phone,
-        'address'         =>  $users->address,
-        'dob'             =>  $users->dob,
-        'create_user_id'  =>  $auth_id,
-        'updated_user_id' =>  $auth_id
+            'name' => $users->name,
+            'email' => $users->email,
+            'password' => $users->password,
+            'profile' => $users->profile,
+            'type' => $users->type,
+            'phone' => $users->phone,
+            'address' => $users->address,
+            'dob' => $users->dob,
+            'create_user_id' => $auth_id,
+            'updated_user_id' => $auth_id,
         ]);
         $insert_user->save();
         return redirect()->back();
@@ -151,7 +149,7 @@ class UserDao implements UserDaoInterface
         $update_user = User::find($user_id);
         $status = Hash::check($oldpwd, $update_user->password);
         if ($status) {
-            $update_user->password   = Hash::make($newpwd);
+            $update_user->password = Hash::make($newpwd);
             $update_user->updated_user_id = $user_id;
             $update_user->updated_at = now();
             $update_user->save();
