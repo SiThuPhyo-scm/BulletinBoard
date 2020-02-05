@@ -49,7 +49,7 @@ class UserController extends Controller
         $search->startdate = $request->startdate;
         $search->enddate = $request->enddate;
         $users = $this->userService->getuser($search);
-        return view('user.userList', compact('users','search'));
+        return view('user.userList', compact('users', 'search'));
     }
 
     /**
@@ -66,7 +66,7 @@ class UserController extends Controller
         $search->startdate = $request->startdate;
         $search->enddate = $request->enddate;
         $users = $this->userService->getuser($search);
-        return view('user.userlist', compact('users','search'));
+        return view('user.userlist', compact('users', 'search'));
     }
 
     /**

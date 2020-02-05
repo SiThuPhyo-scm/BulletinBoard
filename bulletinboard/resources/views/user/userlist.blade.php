@@ -69,7 +69,9 @@
             <div class="row">
                 <!-- pagination -->
                 <ul class="pagination col-md-12 justify-content-center mt-2">
-                    {{$users->links()}}
+                @if(!empty($search))
+                    {{$users->appends(request()->except('page'))->links()}}
+                @endif
                 </ul>
             </div>
         </div>

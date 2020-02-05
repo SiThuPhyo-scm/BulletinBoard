@@ -15,8 +15,9 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 //User
+Route::group(['middleware' => ['preventbackbutton','auth']], function(){
 Route::prefix('user')->group(function() {
     // UserList Screen
     Route::get('/', array('as'=>'user.userlist', 'uses'=>'User\UserController@index'))->middleware('type');
@@ -79,3 +80,5 @@ Route::prefix('post')->group(function() {
 
     Route::get('/download', array('as'=>'export', 'uses'=>'Post\PostController@export'));
 });
+})
+;
