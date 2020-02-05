@@ -34,3 +34,4 @@ class User extends Model
         return $this->belongsTo(User::class, 'updated_user_id');
     }
 }
+

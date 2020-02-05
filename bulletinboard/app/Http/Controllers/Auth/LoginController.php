@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cookie;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Validator;
@@ -34,12 +35,12 @@ class LoginController extends Controller
      */
     public function login(LoginRequest $request)
     {
-        $email = $request->email;
-        $pwd = $request->password;
         $validator = $request->validated();
-
-        if (Auth::guard('')->attempt(['email' => $email, 'password' => $pwd])) {
+        $remember = $request->input('remember') ? true : false;
+        if (Auth::guard()->attempt(['email' => $request->email, 'password' => $request->password], $remember)) {
             return redirect()->intended('/post');
+            $user = auth()->user();
+            Auth::login($user,true);
         } else {
             return back()
                 ->with('incorrect', 'Email or password incorrect!')

@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+Route::get('mail', function () {
+    return view('auth.mail');
+});
+
 Auth::routes(['verify' => true]);
 //User
 Route::group(['middleware' => ['preventbackbutton','auth']], function(){

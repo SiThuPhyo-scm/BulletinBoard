@@ -19,7 +19,7 @@
                             <label for="email" class="col-3 col-sm-3 col-md-3 col-form-label">Email</label>
 
                             <div class="col-8 col-sm-8 col-md-7">
-                            <input type="text" name="email" id="email" value="{{old('email')}}" class="form-control @error('email') is-invalid @enderror">
+                            <input type="text" name="email" id="email" value="{{old('email')}}" class="form-control @error('email') is-invalid @enderror" autocomplete="email" autofocus>
                                 @error('email')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
