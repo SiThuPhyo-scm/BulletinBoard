@@ -6,19 +6,35 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Auth\Notifications\ResetPassword as ResetPasswordNotification;
 
-class Reset extends Notification
+class ResetPassword extends ResetPasswordNotification
 {
     use Queueable;
+
+
+    /**
+     * The password reset token.
+     *
+     * @var string
+     */
+    public $token;
+
+    /**
+     * The callback that should be used to build the mail message.
+     *
+     * @var \Closure|null
+     */
+    public static $toMailCallback;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($token)
     {
-        //
+        $this->token = $token;
     }
 
     /**
@@ -40,10 +56,9 @@ class Reset extends Notification
      */
     public function toMail($notifiable)
     {
+        $url = url(config('app.url.host').route('password.reset', ['token' => $this->token, 'email' => $notifiable->getEmailForPasswordReset()], false));
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+            ->view('auth.mail', compact('url'));
     }
 
     /**
