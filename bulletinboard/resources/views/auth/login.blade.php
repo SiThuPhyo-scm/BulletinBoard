@@ -54,7 +54,7 @@
                         <div class="form-group row">
                             <div class="col-sm col-sm-6 col-md-6 offset-4 offset-sm-4 offset-md-4">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') !== null ? 'checked' : '' }}>
 
                                     <label class="form-check-label" for="remember">
                                         Remember Me

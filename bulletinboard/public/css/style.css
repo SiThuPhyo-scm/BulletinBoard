@@ -50,9 +50,6 @@ table tr td {
     width: 150px;
     height: 150px;
 }
-.table-scroll {
-    overflow-x: auto;
-}
 .toggle.round {
     border-radius: 50px;
 }

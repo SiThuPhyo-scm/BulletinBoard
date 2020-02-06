@@ -13,13 +13,14 @@
 
 Route::get('/', function () {
     return view('auth.login');
-});
+})->middleware('guest');
 
 Route::get('mail', function () {
     return view('auth.mail');
 });
 
-Auth::routes(['verify' => true]);
+Auth::routes();
+
 //User
 Route::group(['middleware' => ['preventbackbutton','auth']], function(){
 Route::prefix('user')->group(function() {

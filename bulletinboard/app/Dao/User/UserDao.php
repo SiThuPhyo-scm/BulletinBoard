@@ -16,22 +16,22 @@ class UserDao implements UserDaoInterface
     public function getuser($search)
     {
         if ($search == null) {
-            $users = User::orderBy('users.updated_at', 'DESC')->paginate(5);
+            $users = User::orderBy('users.order', 'ASC')->paginate(5);
         } elseif ($search->name == null && $search->email == null && ($search->startdate == null || $search->enddate == null)) {
-            $users = User::orderBy('users.updated_at', 'DESC')->paginate(5);
+            $users = User::orderBy('users.order', 'ASC')->paginate(5);
         } elseif ((isset($search->name) && isset($search->email)) && (is_null($search->startdate) || is_null($search->enddate))) {
             $users = User::where('users.name', 'LIKE', '%' . $search->name . '%')
                 ->orWhere('users.email', 'LIKE', '%' . $search->email . '%')
-                ->orderBy('users.updated_at', 'DESC')
+                ->orderBy('users.order', 'ASC')
                 ->paginate(5);
         } else if ((isset($search->name) || isset($search->email)) && (is_null($search->startdate) || is_null($search->enddate))) {
             $users = User::where('users.name', 'LIKE', '%' . $search->name . '%')
                 ->where('users.email', 'LIKE', '%' . $search->email . '%')
-                ->orderBy('users.updated_at', 'DESC')
+                ->orderBy('users.order', 'ASC')
                 ->paginate(5);
         } else if (isset($search->startdate) && isset($search->enddate)) {
             $users = User::whereBetween('users.created_at', array($search->startdate, $search->enddate))
-                ->orderBy('users.updated_at', 'DESC')
+                ->orderBy('users.order', 'ASC')
                 ->paginate(5);
         }
         return $users;
@@ -117,7 +117,7 @@ class UserDao implements UserDaoInterface
         $update->updated_at = now();
         $update->save();
         $users = User::where('create_user_id', $auth_id)
-            ->orderBy('updated_at', 'DESC')
+            ->orderBy('order', 'DESC')
             ->paginate(10);
         return $users;
     }

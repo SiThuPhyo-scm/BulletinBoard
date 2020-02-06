@@ -45,8 +45,8 @@
                     @endphp
                 </div>
             @endif
-            <div class="row table-scroll">
-                <table class="table table-bordered table-striped">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
                     <thead class="text-nowrap">
                         <th>Post Title</th>
                         <th>Post Description</th>
@@ -59,9 +59,9 @@
                         @foreach($posts as $key => $post)
                             <tr>
                                 <td><button class="btn btn-link" data-target="#show" data-toggle="modal" id="show_post" data-show-id="{{$post->id}}">{{$post->title}}</button></td>
-                                <td class="text-justify">{{$post->description}}</td>
-                                <td>{{$post->createuser->name}}</td>
-                                <td>{{$post->created_at->format('Y/m/d')}}</td>
+                                <td data-target="#show" data-toggle="modal" id="show_post" data-show-id="{{$post->id}}" class="text-justify">{{$post->description}}</td>
+                                <td data-target="#show" data-toggle="modal" id="show_post" data-show-id="{{$post->id}}">{{$post->createuser->name}}</td>
+                                <td data-target="#show" data-toggle="modal" id="show_post" data-show-id="{{$post->id}}">{{$post->created_at->format('Y/m/d')}}</td>
                                 <td><a href="/post/edit/{{$post->id}}" class="btn btn-primary">Edit</a></td>
                                 <td><a href="#deleteConfirmModal" class="btn btn-danger postDelete" onclick="deletePost({{$post->id}})" data-toggle="modal">Delete</a></td>
                             </tr>
@@ -149,4 +149,3 @@
 </div>
 
 @endsection
-

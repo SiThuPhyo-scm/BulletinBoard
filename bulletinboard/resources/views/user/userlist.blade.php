@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title','User List')
+
 @section('content')
 
 <div class="container">
@@ -40,9 +41,10 @@
                     @endphp
                 </div>
             @endif
-            <div class="row table-scroll">
-                <table class="table table-striped table-bordered col-12 col-sm-12 col-md-12">
+            <div class="table-responsive">
+                <table id="table" class="table table-bordered table-hover">
                     <thead class="text-nowrap">
+                        <th>Order</th>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Created User</th>
@@ -51,15 +53,16 @@
                         <th>Created Date</th>
                         <th></th>
                     </thead>
-                    <tbody>
+                    <tbody id="tablecontents">
                         @foreach($users as $key => $user)
-                            <tr>
+                            <tr class="row1" data-id="{{ $user->id }}">
+                                <td>{{ $user->order }}</td>
                                 <td><button class="btn btn-link" data-target="#show" data-toggle="modal" id="show_user" data-showid="{{$user->id}}">{{$user->name}}</button></td>
-                                <td>{{$user->email}}</td>
-                                <td>{{$user->createuser->name}}</td>
-                                <td>{{$user->phone}}</td>
-                                <td>{{date('Y/m/d', strtotime($user->dob))}}</td>
-                                <td>{{$user->created_at->format('Y/m/d')}}</td>
+                                <td data-target="#show" data-toggle="modal" id="show_user" data-showid="{{$user->id}}">{{$user->email}}</td>
+                                <td data-target="#show" data-toggle="modal" id="show_user" data-showid="{{$user->id}}">{{$user->createuser->name}}</td>
+                                <td data-target="#show" data-toggle="modal" id="show_user" data-showid="{{$user->id}}">{{$user->phone}}</td>
+                                <td data-target="#show" data-toggle="modal" id="show_user" data-showid="{{$user->id}}">{{date('Y/m/d', strtotime($user->dob))}}</td>
+                                <td data-target="#show" data-toggle="modal" id="show_user" data-showid="{{$user->id}}">{{$user->created_at->format('Y/m/d')}}</td>
                                 <td><a href="#deleteConfirmModal" class="btn btn-danger userDelete" onclick="deleteUser({{$user->id}})" data-toggle="modal">Delete</a></td>
                             </tr>
                         @endforeach
@@ -159,4 +162,3 @@
 </div>
 
 @endsection
-
