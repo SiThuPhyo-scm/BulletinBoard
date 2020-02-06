@@ -27,6 +27,13 @@ class LoginController extends Controller
     use AuthenticatesUsers;
 
     /**
+     * Where to redirect users after login.
+     *
+     * @var string
+     */
+    protected $redirectTo = RouteServiceProvider::POST;
+
+    /**
      * User Login
      * Login action using user email and password
      *
@@ -36,11 +43,10 @@ class LoginController extends Controller
     public function login(LoginRequest $request)
     {
         $validator = $request->validated();
-        $remember = $request->input('remember') ? true : false;
-        if (Auth::guard()->attempt(['email' => $request->email, 'password' => $request->password], $remember)) {
+        $remember = ($request->has('remember')) ? true : false;
+        $auth = Auth::attempt(['email' => $request->email, 'password' => $request->password, 'deleted_at' => null], $remember);
+        if($auth) {
             return redirect()->intended('/post');
-            $user = auth()->user();
-            Auth::login($user,true);
         } else {
             return back()
                 ->with('incorrect', 'Email or password incorrect!')
